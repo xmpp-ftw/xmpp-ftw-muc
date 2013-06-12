@@ -163,8 +163,18 @@ describe('MultiUserChat', function() {
             })
         })
 
-        describe('Incoming presence stanzas', function() {
+        it('Handles incoming presence stanzas', function(done) {
 
+            socket.once('xmpp.muc.roster', function(presence) {
+                should.not.exist(presence.error)
+                presence.room.should.equal('fire@coven.witches.lit')
+                presence.nick.should.equal('cauldron')
+                presence.affiliation.should.equal('owner')
+                presence.role.should.equal('moderator')
+                done()
+            })
+            var stanza = helper.getStanza('presence-join')
+            muc.handle(stanza).should.be.true
         })
     })
 })

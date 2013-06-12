@@ -1,0 +1,8 @@
+<presence
+    from='fire@coven.witches.lit/cauldron'
+    id='1'
+    to='macbeth@example.com/castle'>
+  <x xmlns='http://jabber.org/protocol/muc#user'>
+    <item affiliation='owner' role='moderator'/>
+  </x>
+</presence>
