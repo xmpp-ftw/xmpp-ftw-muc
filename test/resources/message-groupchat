@@ -1,0 +1,7 @@
+<message
+    from='fire@coven.witches.lit/cauldron'
+    id='1'
+    to='macbeth@example.com/castle'
+    type='groupchat'>
+  <body>Are you of woman born?</body>
+</message>

@@ -1,0 +1,10 @@
+<message
+    from='fire@coven.witches.lit/cauldron'
+    id='1'
+    to='macbeth@example.com/castle'
+    type='error'>
+  <body>Are you of woman born?</body>
+  <error by='fire@coven.witches.lit' type='modify'>
+    <bad-request xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+  </error>
+</message>

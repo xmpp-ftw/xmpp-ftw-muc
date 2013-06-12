@@ -1,0 +1,10 @@
+<message
+    from='fire@coven.witches.lit'
+    id='1'
+    to='macbeth@example.com/castle'
+    type='groupchat'>
+  <x xmlns='http://jabber.org/protocol/muc#user'>
+    <status code='170' />
+    <status code='666' />
+  </x>
+</message>

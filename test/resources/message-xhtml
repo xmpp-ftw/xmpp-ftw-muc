@@ -1,0 +1,12 @@
+<message
+    from='fire@coven.witches.lit/cauldron'
+    id='1'
+    to='macbeth@example.com/castle'
+    type='groupchat'>
+  <body>Are you of woman born?</body>
+  <html xmlns='http://jabber.org/protocol/xhtml-im'>
+    <body xmlns='http://www.w3.org/1999/xhtml'>
+      <p>Are you of <strong>woman </strong> born?</p>
+    </body>
+  </html>
+</message>
