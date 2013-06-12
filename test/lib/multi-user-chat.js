@@ -221,9 +221,7 @@ describe('MultiUserChat', function() {
                 muc.rooms.indexOf(request.room).should.be.above(-1)
                 done()
             })
-            socket.emit('xmpp.muc.join', request, function(error, success) {
-                
-            })
+            socket.emit('xmpp.muc.join', request)
         })
     })
 })
