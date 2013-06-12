@@ -2,16 +2,11 @@ var should  = require('should')
   , MultiUserChat   = require('../../lib/multi-user-chat')
   , ltx     = require('ltx')
   , helper  = require('../helper')
+  , xhtmlIm = require('xmpp-ftw/lib/utils/xep-0071')
 
 describe('MultiUserChat', function() {
 
     var muc, socket, xmpp, manager
-
-    var removeAllListeners = function() {
-        socket.removeAllListeners('xmpp.muc.room.config')
-        socket.removeAllListeners('xmpp.muc.error')
-        socket.removeAllListeners('xmpp.muc.message')
-    }
 
     before(function() {
         socket = new helper.Eventer()
@@ -53,17 +48,7 @@ describe('MultiUserChat', function() {
 
         describe('Incoming message stanzas', function() {
 
-            beforeEach(function() {
-                removeAllListeners()
-            })
-
             it('<message /> of type error', function(done) {
-                socket.once('xmpp.muc.message', function() {
-                    done('Unexpected event on \'xmpp.muc.message\'')
-                })
-                socket.once('xmpp.muc.room.config', function() {
-                    done('Unexpected event on \'xmpp.muc.room.config\'')
-                })
                 socket.once('xmpp.muc.error', function(error) {
                     error.type.should.equal('message')
                     error.error.should.eql(
@@ -78,12 +63,6 @@ describe('MultiUserChat', function() {
             })
 
             it('Incoming room message', function(done) {
-                socket.once('xmpp.muc.error', function() {
-                    done('Unexpected event on \'xmpp.muc.error\'')
-                })
-                socket.once('xmpp.muc.room.config', function() {
-                    done('Unexpected event on \'xmpp.muc.room.config\'')
-                })
                 socket.once('xmpp.muc.message', function(message) {
                     should.not.exist(message.error)
                     should.not.exist(message.delay)
@@ -99,12 +78,6 @@ describe('MultiUserChat', function() {
             })
 
             it('Incoming private message', function(done) {
-                socket.once('xmpp.muc.error', function() {
-                    done('Unexpected event on \'xmpp.muc.error\'')
-                })
-                socket.once('xmpp.muc.room.config', function() {
-                    done('Unexpected event on \'xmpp.muc.room.config\'')
-                })
                 socket.once('xmpp.muc.message', function(message) {
                     message.private.should.be.true
                     message.content.should.equal('Are you of woman born?')
@@ -116,12 +89,6 @@ describe('MultiUserChat', function() {
             })
 
             it('Incoming XHTML message', function(done) {
-                socket.once('xmpp.muc.error', function() {
-                    done('Unexpected event on \'xmpp.muc.error\'')
-                })
-                socket.once('xmpp.muc.room.config', function() {
-                    done('Unexpected event on \'xmpp.muc.room.config\'')
-                })
                 socket.once('xmpp.muc.message', function(message) {
                     message.content.should
                         .equal('<p>Are you of <strong>woman </strong>born?</p>')
@@ -132,12 +99,6 @@ describe('MultiUserChat', function() {
             })
 
             it('Incoming delayed message', function(done) {
-                socket.once('xmpp.muc.error', function() {
-                    done('Unexpected event on \'xmpp.muc.error\'')
-                })
-                socket.once('xmpp.muc.room.config', function() {
-                    done('Unexpected event on \'xmpp.muc.room.config\'')
-                })
                 socket.once('xmpp.muc.message', function(message) {
                     message.delay.should.equal('2002-09-10T23:08:25Z')
                     done()
@@ -147,12 +108,6 @@ describe('MultiUserChat', function() {
             })
 
             it('Incoming room status updates', function(done) {
-                socket.once('xmpp.muc.error', function() {
-                    done('Unexpected event on \'xmpp.muc.error\'')
-                })
-                socket.once('xmpp.muc.message', function() {
-                    done('Unexpected event on \'xmpp.muc.message\'')
-                })
                 socket.once('xmpp.muc.room.config', function(message) {
                     message.room.should.equal('fire@coven.witches.lit')
                     message.status.length.should.equal(2)
@@ -165,7 +120,6 @@ describe('MultiUserChat', function() {
         })
 
         it('Handles incoming presence stanzas', function(done) {
-
             socket.once('xmpp.muc.roster', function(presence) {
                 should.not.exist(presence.error)
                 presence.room.should.equal('fire@coven.witches.lit')
@@ -257,7 +211,6 @@ describe('MultiUserChat', function() {
             })
             var request = { room: 'fire@coven@witches.lit' }
             socket.emit('xmpp.muc.leave', request)
-
         })
 
         it('Sends expected stanza', function(done) {
@@ -265,11 +218,7 @@ describe('MultiUserChat', function() {
                 stanza.is('presence').should.be.true
                 stanza.attrs.type.should.equal('unavailable')
                 stanza.attrs.to.should.equal(request.room)
-                socket.removeAllListeners('xmpp.error.client')
                 done()
-            })
-            socket.once('xmpp.error.client', function() {
-                done('Unexpected event emitted')
             })
             var request = { room: 'fire@coven@witches.lit' }
             muc.rooms.push(request.room)
@@ -279,11 +228,7 @@ describe('MultiUserChat', function() {
         it('Sends expected stanza with \'status\' added', function(done) {
             xmpp.once('stanza', function(stanza) {
                 stanza.getChild('status').getText().should.equal(request.reason)
-                socket.removeAllListeners('xmpp.error.client')
                 done()
-            })
-            socket.once('xmpp.error.client', function() {
-                done('Unexpected event emitted')
             })
             var request = {
                 room: 'fire@coven@witches.lit',
@@ -296,11 +241,7 @@ describe('MultiUserChat', function() {
         it('Removes room from MUC list', function(done) {
             xmpp.once('stanza', function(stanza) {
                 muc.rooms.length.should.equal(0)
-                socket.removeAllListeners('xmpp.error.client')
                 done()
-            })
-            socket.once('xmpp.error.client', function() {
-                done('Unexpected event emitted')
             })
             var request = {
                 room: 'fire@coven@witches.lit',
@@ -308,6 +249,118 @@ describe('MultiUserChat', function() {
             }
             muc.rooms = [ request.room ]
             socket.emit('xmpp.muc.leave', request)
+        })
+
+    })
+
+    describe('Sending a message', function() {
+
+        beforeEach(function() {
+            // Somewhere I'm not clearing a stanza listener
+            // sadly this addition is required, until located
+            xmpp.removeAllListeners('stanza')
+        })
+
+        it('Returns error if \'room\' key not provided', function(done) {
+            xmpp.once('stanza', function() {
+                done('Unexpected outgoing stanza')
+            })
+            socket.once('xmpp.error.client', function(error) {
+                error.type.should.equal('modify')
+                error.condition.should.equal('client-error')
+                error.description.should.equal("Missing 'room' key")
+                error.request.should.eql(request)
+                xmpp.removeAllListeners('stanza')
+                done()
+            })
+            var request = {}
+            socket.emit('xmpp.muc.message', request)
+        })
+
+        it('Should return error if not registered with room', function(done) {
+            xmpp.once('stanza', function() {
+                done('Unexpected outgoing stanza')
+            })
+            socket.once('xmpp.error.client', function(error) {
+                error.type.should.equal('modify')
+                error.condition.should.equal('client-error')
+                error.description.should.equal("Not registered with this room")
+                error.request.should.eql(request)
+                xmpp.removeAllListeners('stanza')
+                done()
+            })
+            var request = { room: 'fire@coven.witches.lit' }
+            socket.emit('xmpp.muc.message', request)
+        })
+
+        it('Should return error if \'content\' key not provided', function(done) {
+            xmpp.once('stanza', function() {
+                done('Unexpected outgoing stanza')
+            })
+            socket.once('xmpp.error.client', function(error) {
+                error.type.should.equal('modify')
+                error.condition.should.equal('client-error')
+                error.description.should.equal("Message content not provided")
+                var expectedErrorRequest = {
+                    to: "fire@witches.coven.lit",
+                    type: "groupchat"
+                }
+                error.request.should.eql(expectedErrorRequest)
+                xmpp.removeAllListeners('stanza')
+                done()
+            })
+            var request = { room: 'fire@witches.coven.lit' }
+            muc.rooms.push(request.room)
+            socket.emit('xmpp.muc.message', request)
+        })
+
+        it('Sends expected stanza', function(done) {
+            xmpp.once('stanza', function(stanza) {
+                stanza.attrs.to.should.equal(request.room)
+                stanza.attrs.type.should.equal("groupchat")
+                stanza.getChild('body').getText().should.equal('some content')
+                done()
+            })
+            var request = {
+                room: 'fire@coven@witches.lit',
+                content: 'some content'
+            }
+            muc.rooms.push(request.room)
+            socket.emit('xmpp.muc.message', request)
+        })
+
+        it('Sends expected direct message', function(done) {
+            xmpp.once('stanza', function(stanza) {
+                stanza.attrs.to.should.equal(request.room + '/' + request.to)
+                stanza.attrs.type.should.equal('chat')
+                done()
+            })
+            var request = {
+                room: 'fire@coven@witches.lit',
+                content: 'some direct content',
+                to: 'caldron'
+            }
+            muc.rooms.push(request.room)
+            socket.emit('xmpp.muc.message', request)
+        })
+
+        it('Can send XHTML message', function(done) {
+            xmpp.once('stanza', function(stanza) {
+                stanza.attrs.to.should.equal(request.room)
+                stanza.getChild('body').getText()
+                    .should.equal('some XHTML content')
+                stanza.getChild('html', xhtmlIm.NS_XHTML_IM)
+                    .getChild('body', xhtmlIm.NS_XHTML)
+                    .children.join('').should.equal(request.content)
+                done()
+            })
+            var request = {
+                room: 'fire@coven@witches.lit',
+                content: '<p>some <strong>XHTML</strong> content</p>',
+                format: 'xhtml'
+            }
+            muc.rooms.push(request.room)
+            socket.emit('xmpp.muc.message', request)
         })
 
     })
