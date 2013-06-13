@@ -1,0 +1,22 @@
+<iq from='fire@coven.witches.lit'
+    id='1'
+    to='macbeth@example.com/castle'
+    type='result'>
+  <query xmlns='http://jabber.org/protocol/muc#owner'>
+    <x xmlns='jabber:x:data' type='form'>
+      <title>Configuration for "fire" Room</title>
+      <instructions>Use this form to update room configuration</instructions>
+      <field
+          type='hidden'
+          var='FORM_TYPE'>
+        <value>http://jabber.org/protocol/muc#roomconfig</value>
+      </field>
+      <field
+          label='Short Description of Room'
+          type='text-single'
+          var='muc#roomconfig_roomdesc'>
+        <value>Come chat around the fire</value>
+      </field>
+    </x>
+  </query>
+</iq>
