@@ -293,7 +293,7 @@ describe('MultiUserChat', function() {
             socket.emit('xmpp.muc.message', request)
         })
 
-        it('Should return error if \'content\' key not provided', function(done) {
+        it('Returns error if \'content\' key not provided', function(done) {
             xmpp.once('stanza', function() {
                 done('Unexpected outgoing stanza')
             })
@@ -363,6 +363,86 @@ describe('MultiUserChat', function() {
             socket.emit('xmpp.muc.message', request)
         })
 
+    })
+
+    describe('Room configuration', function() {
+
+        describe('Get configuration', function() {
+
+            it('Errors if \'room\' key missing', function(done) {
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                socket.once('xmpp.error.client', function(error) {
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing 'room' key")
+                    error.request.should.eql(request)
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                })
+                var request = {}
+                socket.emit('xmpp.muc.room.config.get', request)
+            })
+
+            it('Handles error response stanza', function(done) {
+                var room = 'fire@coven.witches.lit'
+                xmpp.once('stanza', function(stanza) {
+                     stanza.is('iq').should.be.true
+                     stanza.attrs.type.should.equal('get')
+                     stanza.attrs.to.should.equal(room)
+                     should.exist(stanza.attrs.id)
+                     stanza.getChild('query', muc.NS_OWNER).should.exist
+                     manager.makeCallback(helper.getStanza('iq-error'))
+                })
+                var callback = function(error, success) {
+                    should.not.exist(success)
+                    error.should.eql({
+                        type: 'cancel',
+                        condition: 'error-condition'
+                    })
+                    done()
+                }
+                socket.emit(
+                    'xmpp.muc.room.config.get',
+                    { room: room }, 
+                    callback
+                )
+            })
+
+            it('Returns room configuration', function(done) {
+                var room = 'fire@coven.witches.lit'
+                xmpp.once('stanza', function(stanza) {
+                     stanza.is('iq').should.be.true
+                     stanza.attrs.type.should.equal('get')
+                     stanza.attrs.to.should.equal(room)
+                     should.exist(stanza.attrs.id)
+                     stanza.getChild('query', muc.NS_OWNER).should.exist
+                     manager.makeCallback(helper.getStanza('config-get-result'))
+                })
+                var callback = function(error, data) {
+                    should.not.exist(error)
+                    data.title.should.equal('Configuration for "fire" Room')
+                    data.instructions.should.equal(
+                        'Use this form to update room configuration'
+                    )
+                    data.fields.length.should.equal(1)
+                    data.fields[0].label
+                        .should.equal('Short Description of Room')
+                    data.fields[0].type = 'text-single'
+                    data.fields[0].var = 'muc#roomconfig_roomdesc'
+                    data.fields[0].value = 'Come chat around the fire'
+                    data.fields[0].required.should.equal.false
+                    done()
+                }
+                socket.emit(
+                    'xmpp.muc.room.config.get',
+                    { room: room }, 
+                    callback
+                )
+            })
+        })
+   
     })
 
 })
