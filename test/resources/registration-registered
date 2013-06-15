@@ -1,0 +1,9 @@
+<iq from='fire@coven.witches.lit'
+    id='1'
+    to='macbeth@example.com/castle'
+    type='result'>
+  <query xmlns='jabber:iq:register'>
+    <registered/>
+    <username>notofwomanborn</username>
+  </query>
+</iq>
