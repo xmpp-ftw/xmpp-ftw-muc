@@ -551,6 +551,88 @@ describe('MultiUserChat', function() {
             })
 
         })
+
+        describe('Get registration information', function() {
+
+            it('Errors if \'room\' key missing', function(done) {
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                socket.once('xmpp.error.client', function(error) {
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing 'room' key")
+                    error.request.should.eql(request)
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                })
+                var request = {}
+                socket.emit('xmpp.muc.register.info', request)
+            })
+
+            it('Handles error response stanza', function(done) {
+                var room = 'fire@coven.witches.lit'
+                xmpp.once('stanza', function(stanza) {
+                     stanza.is('iq').should.be.true
+                     stanza.attrs.type.should.equal('get')
+                     stanza.attrs.to.should.equal(room)
+                     should.exist(stanza.attrs.id)
+                     stanza.getChild('query', muc.NS_REGISTER).should.exist
+                     manager.makeCallback(helper.getStanza('iq-error'))
+                })
+                var callback = function(error, success) {
+                    should.not.exist(success)
+                    error.should.eql({
+                        type: 'cancel',
+                        condition: 'error-condition'
+                    })
+                    done()
+                }
+                socket.emit(
+                    'xmpp.muc.register.info',
+                    { room: room, form: [] },
+                    callback
+                )
+            })
+
+            it('Returns registration information', function(done) {
+                var room = 'fire@coven.witches.lit'
+                xmpp.once('stanza', function(stanza) {
+                     stanza.is('iq').should.be.true
+                     stanza.attrs.type.should.equal('get')
+                     stanza.attrs.to.should.equal(room)
+                     should.exist(stanza.attrs.id)
+                     stanza.getChild('query', muc.NS_REGISTER).should.exist
+                     manager.makeCallback(helper.getStanza('registration-info'))
+                })
+                var callback = function(error, success) {
+                    should.not.exist(error)
+                    success.instructions.should.equal(
+                        'To register online visit http://witches.lit'
+                    )
+                    success.form.instructions.should.equal(
+                        'Please return the following information'
+                    )
+                    success.form.title.should.equal('Fire Chat Registration')
+                    success.form.fields.length.should.equal(2)
+                    success.form.fields[0].should.eql({
+                       var: 'muc#register_name',
+                       type: 'text-single',
+                       required: true,
+                       label: 'Name'
+                    })
+                    success.form.fields[1].label.should.equal('Nickname')
+                    done()
+                }
+                socket.emit(
+                    'xmpp.muc.register.info',
+                    { room: room, form: [] },
+                    callback
+                )
+            })
+
+        })
+
     })
 
 })

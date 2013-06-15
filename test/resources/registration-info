@@ -1,0 +1,27 @@
+<iq from='fire@coven.witches.lit'
+    id='1'
+    to='macbeth@example.com/castle'
+    type='result'>
+  <query xmlns='jabber:iq:register'>
+    <instructions>To register online visit http://witches.lit</instructions>
+    <x xmlns='jabber:x:data' type='form'>
+      <title>Fire Chat Registration</title>
+      <instructions>Please return the following information</instructions>
+      <field type='hidden' var='FORM_TYPE'>
+        <value>http://jabber.org/protocol/muc#register</value>
+      </field>
+      <field
+          label='Name'
+          type='text-single'
+          var='muc#register_name'>
+        <required/>
+      </field>
+      <field
+          label='Nickname'
+          type='text-single'
+          var='muc#register_nick'>
+        <required/>
+      </field>
+    </x>
+  </query>
+</iq>
