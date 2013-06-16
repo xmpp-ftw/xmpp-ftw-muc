@@ -751,11 +751,64 @@ describe('MultiUserChat', function() {
             })
 
             it('Handles error response stanza', function(done) {
-                done('Not implemented yet')
+                var room = 'fire@coven.witches.lit'
+                xmpp.once('stanza', function(stanza) {
+                    stanza.is('iq').should.be.true
+                    stanza.attrs.type.should.equal('get')
+                    stanza.attrs.to.should.equal(request.room)
+                    should.exist(stanza.attrs.id)
+                    stanza.getChild('query', muc.NS_ADMIN).should.exist
+                    var item = stanza.getChild('query').getChild('item')
+                    item.attrs.role.should.equal(request.role)
+                    item.attrs.nick.should.equal(request.nick)
+                    manager.makeCallback(helper.getStanza('iq-error'))
+                })
+                var callback = function(error, success) {
+                    should.not.exist(success)
+                    error.should.eql({
+                        type: 'cancel',
+                        condition: 'error-condition'
+                    })
+                    done()
+                }
+                var request = {
+                    room: 'fire@witches.coven.lit',
+                    nick: 'notofwomanborn',
+                    role: 'participant'
+                }
+                socket.emit(
+                    'xmpp.muc.role.set',
+                    request,
+                    callback
+                )
             })
 
             it('Handles successful role set', function(done) {
-                done('Not implemented yet')
+                var room = 'fire@coven.witches.lit'
+                xmpp.once('stanza', function(stanza) {
+                    stanza.getChild('query')
+                        .getChild('item')
+                        .getChild('reason')
+                        .getText()
+                        .should.equal(request.reason)
+                    manager.makeCallback(helper.getStanza('iq-result'))
+                })
+                var callback = function(error, success) {
+                    should.not.exist(error)
+                    success.should.be.true
+                    done()
+                }
+                var request = {
+                    room: 'fire@witches.coven.lit',
+                    nick: 'notofwomanborn',
+                    role: 'participant',
+                    reason: 'Great nick!'
+                }
+                socket.emit(
+                    'xmpp.muc.role.set',
+                    request,
+                    callback
+                )
             })
 
         })
