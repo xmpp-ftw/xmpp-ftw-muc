@@ -692,4 +692,54 @@ describe('MultiUserChat', function() {
 
     })
 
+    describe('Roles', function() {
+
+        describe('Set role', function() {
+
+            it('Errors if \'room\' key not provided', function(done) {
+
+                done('Not implemented yet')
+            })
+
+            it('Errors if \'nick\' key not provided', function(done) {
+
+                done('Not implemented yet')
+            })
+
+            it('Errors if \'role\' key not provided', function(done) {
+                done('Not implemented yet')
+            })
+
+            it('Handles error response stanza', function(done) {
+                done('Not implemented yet')
+            })
+
+            it('Handles successful role set', function(done) {
+                done('Not implemented yet')
+            })
+
+        })
+
+        describe.ignore('Get current roles', function() {
+
+            it('Errors if \'room\' key not provided', function(done) {
+                done('Not implemented yet')
+            })
+
+            it('Errors if \'role\' key not provided', function(done) {
+                done('Not implemented yet')
+            }) 
+
+            it('Handles error response stanza', function(done) {
+                done('Not implemented yet')
+            }) 
+ 
+            it('Returns users with specified role', function(done) {
+                done('Not implemented yet')
+            })
+
+        })
+
+    })
+
 })
