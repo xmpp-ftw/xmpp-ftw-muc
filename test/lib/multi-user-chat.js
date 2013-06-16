@@ -697,17 +697,57 @@ describe('MultiUserChat', function() {
         describe('Set role', function() {
 
             it('Errors if \'room\' key not provided', function(done) {
-
-                done('Not implemented yet')
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                var callback = function(error, success) {
+                    should.not.exist(success)
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing 'room' key")
+                    error.request.should.eql(request)
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                }
+                var request = {}
+                socket.emit('xmpp.muc.role.set', request, callback)
             })
 
             it('Errors if \'nick\' key not provided', function(done) {
-
-                done('Not implemented yet')
+                var request = { room: 'fire@witches.coven.lit' }
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                var callback = function(error, success) {
+                    should.not.exist(success)
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing 'nick' key")
+                    error.request.should.eql(request)
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                }
+                socket.emit('xmpp.muc.role.set', request, callback)
             })
 
             it('Errors if \'role\' key not provided', function(done) {
-                done('Not implemented yet')
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                var callback = function(error, success) {
+                    should.not.exist(success)
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing 'role' key")
+                    error.request.should.eql(request)
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                }
+                var request = {
+                    room: 'fire@witches.coven.lit',
+                    nick: 'notofwomanborn'
+                }
+                socket.emit('xmpp.muc.role.set', request, callback)
             })
 
             it('Handles error response stanza', function(done) {
@@ -720,7 +760,7 @@ describe('MultiUserChat', function() {
 
         })
 
-        describe.ignore('Get current roles', function() {
+        describe('Get current roles', function() {
 
             it('Errors if \'room\' key not provided', function(done) {
                 done('Not implemented yet')
