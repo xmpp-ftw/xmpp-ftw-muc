@@ -1,0 +1,19 @@
+<iq from='fire@coven.witches.lit'
+    id='1'
+    to='macbeth@example.com/castle'
+    type='result'>
+  <query xmlns='http://jabber.org/protocol/muc#admin'>
+    <item affiliation='none'
+          jid='fairyqueen@midsummer.lit/in-love'
+          nick='Titania'
+          role='participant'/>
+    <item affiliation='member'
+          jid='oberon@midsummer.lit/castle'
+          nick='Oberon'
+          role='participant'/>
+    <item affiliation='none'
+          jid='bottom@midsummer.lit/potion'
+          nick='Bottom'
+          role='participant'/>
+  </query>
+</iq>

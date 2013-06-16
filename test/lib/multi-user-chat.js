@@ -751,10 +751,9 @@ describe('MultiUserChat', function() {
             })
 
             it('Handles error response stanza', function(done) {
-                var room = 'fire@coven.witches.lit'
                 xmpp.once('stanza', function(stanza) {
                     stanza.is('iq').should.be.true
-                    stanza.attrs.type.should.equal('get')
+                    stanza.attrs.type.should.equal('set')
                     stanza.attrs.to.should.equal(request.room)
                     should.exist(stanza.attrs.id)
                     stanza.getChild('query', muc.NS_ADMIN).should.exist
@@ -784,7 +783,6 @@ describe('MultiUserChat', function() {
             })
 
             it('Handles successful role set', function(done) {
-                var room = 'fire@coven.witches.lit'
                 xmpp.once('stanza', function(stanza) {
                     stanza.getChild('query')
                         .getChild('item')
@@ -816,19 +814,105 @@ describe('MultiUserChat', function() {
         describe('Get current roles', function() {
 
             it('Errors if \'room\' key not provided', function(done) {
-                done('Not implemented yet')
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                var callback = function(error, success) {
+                    should.not.exist(success)
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing 'room' key")
+                    error.request.should.eql(request)
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                }
+                var request = {}
+                socket.emit('xmpp.muc.role.get', request, callback)
             })
 
             it('Errors if \'role\' key not provided', function(done) {
-                done('Not implemented yet')
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                var callback = function(error, success) {
+                    should.not.exist(success)
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing 'role' key")
+                    error.request.should.eql(request)
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                }
+                var request = {
+                    room: 'fire@witches.coven.lit'
+                }
+                socket.emit('xmpp.muc.role.get', request, callback)
             }) 
 
             it('Handles error response stanza', function(done) {
-                done('Not implemented yet')
+                xmpp.once('stanza', function(stanza) {
+                    stanza.is('iq').should.be.true
+                    stanza.attrs.type.should.equal('get')
+                    stanza.attrs.to.should.equal(request.room)
+                    should.exist(stanza.attrs.id)
+                    stanza.getChild('query', muc.NS_ADMIN).should.exist
+                    var item = stanza.getChild('query').getChild('item')
+                    item.attrs.role.should.equal(request.role)
+                    manager.makeCallback(helper.getStanza('iq-error'))
+                })
+                var callback = function(error, success) {
+                    should.not.exist(success)
+                    error.should.eql({
+                        type: 'cancel',
+                        condition: 'error-condition'
+                    })
+                    done()
+                }
+                var request = {
+                    room: 'fire@witches.coven.lit',
+                    role: 'participant'
+                }
+                socket.emit(
+                    'xmpp.muc.role.get',
+                    request,
+                    callback
+                )
             }) 
  
             it('Returns users with specified role', function(done) {
-                done('Not implemented yet')
+                xmpp.once('stanza', function(stanza) {
+                    manager.makeCallback(helper.getStanza('iq-role-result'))
+                })
+                var callback = function(error, data) {
+                    should.not.exist(error)
+                    data.length.should.equal(3)
+                    data[0].affiliation.should.equal('none')
+                    data[0].jid.should.eql({
+                        domain: 'midsummer.lit',
+                        user: 'fairyqueen',
+                        resource: 'in-love'
+                    })
+                    data[0].nick.should.equal('Titania')
+                    data[0].role.should.equal('participant')
+                    data[1].nick.should.equal('Oberon')
+                    data[1].affiliation.should.equal('member')
+                    data[2].jid.should.eql({
+                        domain: 'midsummer.lit',
+                        user: 'bottom',
+                        resource: 'potion'
+                    })
+                    data[2].role.should.equal('participant')
+                    done()
+                }
+                var request = {
+                    room: 'fire@witches.coven.lit',
+                    role: 'participant'
+                }
+                socket.emit(
+                    'xmpp.muc.role.get',
+                    request,
+                    callback
+                )
             })
 
         })
