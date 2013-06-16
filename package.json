@@ -1,6 +1,6 @@
 {
   "name": "xmpp-ftw-muc",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Multi User Chat/MUC (XEP-0045) plugin for XMPP-FTW",
   "main": "index.js",
   "directories": {
