@@ -227,7 +227,8 @@ describe('MultiUserChat', function() {
 
         it('Sends expected stanza with \'status\' added', function(done) {
             xmpp.once('stanza', function(stanza) {
-                stanza.getChild('status').getText().should.equal(request.reason)
+                stanza.getChild('status').getText()
+                    .should.equal(request.reason)
                 done()
             })
             var request = {
@@ -369,20 +370,51 @@ describe('MultiUserChat', function() {
 
         describe('Get configuration', function() {
 
-            it('Errors if \'room\' key missing', function(done) {
+            it('Errors when no callback provided', function(done) {
                 xmpp.once('stanza', function() {
                     done('Unexpected outgoing stanza')
                 })
                 socket.once('xmpp.error.client', function(error) {
                     error.type.should.equal('modify')
                     error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing callback")
+                    error.request.should.eql({})
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                })
+                socket.emit('xmpp.muc.room.config.get', {})
+            })
+
+            it('Errors when non-function callback provided', function(done) {
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                socket.once('xmpp.error.client', function(error) {
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing callback")
+                    error.request.should.eql({})
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                })
+                socket.emit('xmpp.muc.room.config.get', {}, true)
+            })
+
+            it('Errors if \'room\' key missing', function(done) {
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                var callback = function(error, success) {
+                    should.not.exist(success)
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
                     error.description.should.equal("Missing 'room' key")
                     error.request.should.eql(request)
                     xmpp.removeAllListeners('stanza')
                     done()
-                })
+                }
                 var request = {}
-                socket.emit('xmpp.muc.room.config.get', request)
+                socket.emit('xmpp.muc.room.config.get', request, callback)
             })
 
             it('Handles error response stanza', function(done) {
@@ -445,52 +477,85 @@ describe('MultiUserChat', function() {
 
         describe('Set configuration', function() {
 
-            it('Errors if \'room\' key missing', function(done) {
+            it('Errors when no callback provided', function(done) {
                 xmpp.once('stanza', function() {
                     done('Unexpected outgoing stanza')
                 })
                 socket.once('xmpp.error.client', function(error) {
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing callback")
+                    error.request.should.eql({})
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                })
+                socket.emit('xmpp.muc.room.config.set', {})
+            })
+
+            it('Errors when non-function callback provided', function(done) {
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                socket.once('xmpp.error.client', function(error) {
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing callback")
+                    error.request.should.eql({})
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                })
+                socket.emit('xmpp.muc.room.config.set', {}, true)
+            })
+
+            it('Errors if \'room\' key missing', function(done) {
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                var callback = function(error, success) {
+                    should.not.exist(success)
                     error.type.should.equal('modify')
                     error.condition.should.equal('client-error')
                     error.description.should.equal("Missing 'room' key")
                     error.request.should.eql(request)
                     xmpp.removeAllListeners('stanza')
                     done()
-                })
+                }
                 var request = {}
-                socket.emit('xmpp.muc.room.config.set', request)
+                socket.emit('xmpp.muc.room.config.set', request, callback)
             })   
 
             it('Errors if \'form\' key missing', function(done) {
                 xmpp.once('stanza', function() {
                     done('Unexpected outgoing stanza')
                 })
-                socket.once('xmpp.error.client', function(error) {
+                var callback = function(error, success) {
+                    should.not.exist(success)
                     error.type.should.equal('modify')
                     error.condition.should.equal('client-error')
                     error.description.should.equal("Missing 'form' key")
                     error.request.should.eql(request)
                     xmpp.removeAllListeners('stanza')
                     done()
-                })
+                }
                 var request = { room: 'fire@witches.coven.lit' }
-                socket.emit('xmpp.muc.room.config.set', request)
+                socket.emit('xmpp.muc.room.config.set', request, callback)
             })
 
             it('Handles invalid data form', function(done) {
                 xmpp.once('stanza', function() {
                     done('Unexpected outgoing stanza')
                 })
-                socket.once('xmpp.error.client', function(error) {
+                var callback = function(error, success) {
+                    should.not.exist(success)
                     error.type.should.equal('modify')
                     error.condition.should.equal('client-error')
                     error.description.should.equal("Badly formatted data form")
                     error.request.should.eql(request)
                     xmpp.removeAllListeners('stanza')
                     done()
-                })
+                }
                 var request = { room: 'fire@witches.coven.lit', form: true }
-                socket.emit('xmpp.muc.room.config.set', request)
+                socket.emit('xmpp.muc.room.config.set', request, callback)
             })
 
             it('Handles error response stanza', function(done) {
@@ -556,20 +621,50 @@ describe('MultiUserChat', function() {
 
             describe('Get Registration information', function() {
 
-                it('Errors if \'room\' key missing', function(done) {
+                it('Errors when no callback provided', function(done) {
                     xmpp.once('stanza', function() {
                         done('Unexpected outgoing stanza')
                     })
                     socket.once('xmpp.error.client', function(error) {
                         error.type.should.equal('modify')
                         error.condition.should.equal('client-error')
-                        error.description.should.equal("Missing 'room' key")
-                        error.request.should.eql(request)
+                        error.description.should.equal("Missing callback")
+                        error.request.should.eql({})
                         xmpp.removeAllListeners('stanza')
                         done()
                     })
-                    var request = {}
-                    socket.emit('xmpp.muc.register.info', request)
+                    socket.emit('xmpp.muc.register.info', {})
+                })
+    
+                it('Errors when non-function callback provided', function(done) {
+                    xmpp.once('stanza', function() {
+                        done('Unexpected outgoing stanza')
+                    })
+                    socket.once('xmpp.error.client', function(error) {
+                        error.type.should.equal('modify')
+                        error.condition.should.equal('client-error')
+                        error.description.should.equal("Missing callback")
+                        error.request.should.eql({})
+                        xmpp.removeAllListeners('stanza')
+                        done()
+                    })
+                    socket.emit('xmpp.muc.register.info', {}, true)
+                })
+
+                it('Errors if \'room\' key missing', function(done) {
+                    xmpp.once('stanza', function() {
+                        done('Unexpected outgoing stanza')
+                    })
+                    var callback = function(error, success) {
+                        should.not.exist(success)
+                        error.type.should.equal('modify')
+                        error.condition.should.equal('client-error')
+                        error.description.should.equal("Missing 'room' key")
+                        error.request.should.eql({})
+                        xmpp.removeAllListeners('stanza')
+                        done()
+                    }
+                    socket.emit('xmpp.muc.register.info', {}, callback)
                 })
 
                 it('Handles error response stanza', function(done) {
@@ -696,6 +791,36 @@ describe('MultiUserChat', function() {
 
         describe('Set role', function() {
 
+            it('Errors when no callback provided', function(done) {
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                socket.once('xmpp.error.client', function(error) {
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing callback")
+                    error.request.should.eql({})
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                })
+                socket.emit('xmpp.muc.role.set', {})
+            })
+
+            it('Errors when non-function callback provided', function(done) {
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                socket.once('xmpp.error.client', function(error) {
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing callback")
+                    error.request.should.eql({})
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                })
+                socket.emit('xmpp.muc.role.set', {}, true)
+            })
+
             it('Errors if \'room\' key not provided', function(done) {
                 xmpp.once('stanza', function() {
                     done('Unexpected outgoing stanza')
@@ -813,6 +938,36 @@ describe('MultiUserChat', function() {
 
         describe('Get current roles', function() {
 
+            it('Errors when no callback provided', function(done) {
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                socket.once('xmpp.error.client', function(error) {
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing callback")
+                    error.request.should.eql({})
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                })
+                socket.emit('xmpp.muc.role.get', {})
+            })
+
+            it('Errors when non-function callback provided', function(done) {
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                socket.once('xmpp.error.client', function(error) {
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing callback")
+                    error.request.should.eql({})
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                })
+                socket.emit('xmpp.muc.role.get', {}, true)
+            })
+
             it('Errors if \'room\' key not provided', function(done) {
                 xmpp.once('stanza', function() {
                     done('Unexpected outgoing stanza')
@@ -927,6 +1082,37 @@ describe('MultiUserChat', function() {
                 // Somewhere I'm not clearing a stanza listener
                 // sadly this addition is required, until located
                 xmpp.removeAllListeners('stanza')
+            })
+
+
+            it('Errors when no callback provided', function(done) {
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                socket.once('xmpp.error.client', function(error) {
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing callback")
+                    error.request.should.eql({})
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                })
+                socket.emit('xmpp.muc.affiliation', {})
+            })
+
+            it('Errors when non-function callback provided', function(done) {
+                xmpp.once('stanza', function() {
+                    done('Unexpected outgoing stanza')
+                })
+                socket.once('xmpp.error.client', function(error) {
+                    error.type.should.equal('modify')
+                    error.condition.should.equal('client-error')
+                    error.description.should.equal("Missing callback")
+                    error.request.should.eql({})
+                    xmpp.removeAllListeners('stanza')
+                    done()
+                })
+                socket.emit('xmpp.muc.affiliation', {}, true)
             })
 
             it('Errors if \'room\' key not provided', function(done) {
@@ -1048,4 +1234,5 @@ describe('MultiUserChat', function() {
         })
 
     })
+
 })
