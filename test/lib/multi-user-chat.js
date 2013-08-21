@@ -35,7 +35,7 @@ describe('MultiUserChat', function() {
 
         it('Should ignore response on incoming messages', function() {
             var room = 'fire@coven.witches.lit'
-            muc.rooms.push(room) 
+            muc.rooms.push(room)
             muc.handles(ltx.parse('<message from="' + room + '/cauldron" />'))
                 .should.be.true
         })
@@ -59,7 +59,7 @@ describe('MultiUserChat', function() {
                     done()
                 })
                 var stanza = helper.getStanza('message-error')
-                muc.handle(stanza).should.be.true                
+                muc.handle(stanza).should.be.true
             })
 
             it('Incoming room message', function(done) {
@@ -240,7 +240,7 @@ describe('MultiUserChat', function() {
         })
 
         it('Removes room from MUC list', function(done) {
-            xmpp.once('stanza', function(stanza) {
+            xmpp.once('stanza', function() {
                 muc.rooms.length.should.equal(0)
                 done()
             })
@@ -437,7 +437,7 @@ describe('MultiUserChat', function() {
                 }
                 socket.emit(
                     'xmpp.muc.room.config.get',
-                    { room: room }, 
+                    { room: room },
                     callback
                 )
             })
@@ -469,7 +469,7 @@ describe('MultiUserChat', function() {
                 }
                 socket.emit(
                     'xmpp.muc.room.config.get',
-                    { room: room }, 
+                    { room: room },
                     callback
                 )
             })
@@ -522,7 +522,7 @@ describe('MultiUserChat', function() {
                 }
                 var request = {}
                 socket.emit('xmpp.muc.room.config.set', request, callback)
-            })   
+            })
 
             it('Errors if \'form\' key missing', function(done) {
                 xmpp.once('stanza', function() {
@@ -1002,7 +1002,7 @@ describe('MultiUserChat', function() {
                     room: 'fire@witches.coven.lit'
                 }
                 socket.emit('xmpp.muc.role.get', request, callback)
-            }) 
+            })
 
             it('Handles error response stanza', function(done) {
                 xmpp.once('stanza', function(stanza) {
@@ -1032,10 +1032,10 @@ describe('MultiUserChat', function() {
                     request,
                     callback
                 )
-            }) 
+            })
  
             it('Returns users with specified role', function(done) {
-                xmpp.once('stanza', function(stanza) {
+                xmpp.once('stanza', function() {
                     manager.makeCallback(helper.getStanza('iq-role-result'))
                 })
                 var callback = function(error, data) {
@@ -1147,7 +1147,7 @@ describe('MultiUserChat', function() {
                 }
                 var request = { room: 'fire@witches.coven.lit' }
                 socket.emit('xmpp.muc.affiliation', request, callback)
-            }) 
+            })
 
             it('Errors if \'affiliation\' key not provided', function(done) {
                 xmpp.once('stanza', function() {
