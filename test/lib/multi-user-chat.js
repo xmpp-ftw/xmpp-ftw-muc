@@ -1,8 +1,9 @@
-var should  = require('should')
-  , MultiUserChat   = require('../../lib/multi-user-chat')
-  , ltx     = require('ltx')
-  , helper  = require('../helper')
-  , xhtmlIm = require('xmpp-ftw/lib/utils/xep-0071')
+var should        = require('should')
+  , MultiUserChat = require('../../lib/multi-user-chat')
+  , ltx           = require('ltx')
+  , helper        = require('../helper')
+  , xhtmlIm       = require('xmpp-ftw/lib/utils/xep-0071')
+  , chatState     = require('xmpp-ftw/lib/utils/xep-0085')
 
 describe('MultiUserChat', function() {
 
@@ -106,7 +107,28 @@ describe('MultiUserChat', function() {
                 var stanza = helper.getStanza('message-delay')
                 muc.handle(stanza).should.be.true
             })
-
+            
+            it('Incoming XHTML message with chat state', function(done) {
+                socket.once('xmpp.muc.message', function(message) {
+                    message.content.should
+                        .equal('<p>Are you of <strong>woman </strong>born?</p>')
+                    message.state.should.equal('active')
+                    done()
+                })
+                var stanza = helper.getStanza('message-xhtml-with-chat-state')
+                muc.handle(stanza).should.be.true
+            })
+            
+            it('Incoming message with chat state', function(done) {
+                socket.once('xmpp.muc.message', function(message) {
+                    should.not.exist(message.content)
+                    message.state.should.equal('active')
+                    done()
+                })
+                var stanza = helper.getStanza('message-chat-state')
+                muc.handle(stanza).should.be.true
+            })
+            
             it('Incoming room status updates', function(done) {
                 socket.once('xmpp.muc.room.config', function(message) {
                     message.room.should.equal('fire@coven.witches.lit')
@@ -294,17 +316,17 @@ describe('MultiUserChat', function() {
             socket.emit('xmpp.muc.message', request)
         })
 
-        it('Returns error if \'content\' key not provided', function(done) {
+        it('Errors if \'content\' and chat state not provided', function(done) {
             xmpp.once('stanza', function() {
                 done('Unexpected outgoing stanza')
             })
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Message content not provided")
+                error.description
+                    .should.equal('Message content or chat state not provided')
                 var expectedErrorRequest = {
-                    to: "fire@witches.coven.lit",
-                    type: "groupchat"
+                    room: "fire@witches.coven.lit"
                 }
                 error.request.should.eql(expectedErrorRequest)
                 xmpp.removeAllListeners('stanza')
@@ -330,6 +352,39 @@ describe('MultiUserChat', function() {
             socket.emit('xmpp.muc.message', request)
         })
 
+        it('Sends expected stanza with chat state', function(done) {
+            xmpp.once('stanza', function(stanza) {
+                stanza.attrs.to.should.equal(request.room)
+                stanza.attrs.type.should.equal("groupchat")
+                stanza.getChild('body').getText().should.equal('some content')
+                stanza.getChild('active', chatState.NS).should.exist
+                done()
+            })
+            var request = {
+                room: 'fire@coven@witches.lit',
+                content: 'some content',
+                state: 'active'
+            }
+            muc.rooms.push(request.room)
+            socket.emit('xmpp.muc.message', request)
+        })
+        
+        it('Sends expected stanza with chat state only', function(done) {
+            xmpp.once('stanza', function(stanza) {
+                stanza.attrs.to.should.equal(request.room)
+                stanza.attrs.type.should.equal("groupchat")
+                should.not.exist(stanza.getChild('body'))
+                stanza.getChild('active', chatState.NS).should.exist
+                done()
+            })
+            var request = {
+                room: 'fire@coven@witches.lit',
+                state: 'active'
+            }
+            muc.rooms.push(request.room)
+            socket.emit('xmpp.muc.message', request)
+        })
+        
         it('Sends expected direct message', function(done) {
             xmpp.once('stanza', function(stanza) {
                 stanza.attrs.to.should.equal(request.room + '/' + request.to)
