@@ -101,7 +101,7 @@ describe('MultiUserChat', function() {
 
             it('Incoming delayed message', function(done) {
                 socket.once('xmpp.muc.message', function(message) {
-                    message.delay.should.equal('2002-09-10T23:08:25Z')
+                    message.delay.when.should.equal('2002-09-10T23:08:25Z')
                     done()
                 })
                 var stanza = helper.getStanza('message-delay')

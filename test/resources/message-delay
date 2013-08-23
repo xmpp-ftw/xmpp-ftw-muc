@@ -7,6 +7,5 @@
   <delay xmlns='urn:xmpp:delay'
      from='coven.witches.lit'
      stamp='2002-09-10T23:08:25Z'>
-    Offline Storage
-  </delay>
+    Offline Storage</delay>
 </message>
