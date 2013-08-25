@@ -1,0 +1,12 @@
+<presence
+    from='fire@coven.witches.lit/cauldron'
+    id='1'
+    to='romeo@shakespeare.lit/laptop'>
+  <x xmlns='http://jabber.org/protocol/muc#user'>
+    <item affiliation='member'
+          jid='fire@coven.witches.lit/lovesick-puppy'
+          nick='lonely-singleton'
+          role='participant'/>
+    <status code='303'/>
+  </x>
+</presence>

@@ -136,6 +136,22 @@ describe('Incoming stanzas', function() {
             muc.handle(stanza).should.be.true
         })
         
+        it('Incoming user nickname updates', function(done) {
+            socket.once('xmpp.muc.roster', function(message) {
+                message.room.should.equal('fire@coven.witches.lit')
+                message.jid.domain.should.equal('coven.witches.lit')
+                message.jid.user.should.equal('fire')
+                message.jid.resource.should.equal('lovesick-puppy')
+                message.nick.should.equal('lonely-singleton')
+                message.role.should.equal('participant')
+                message.status.length.should.equal(1)
+                message.status.should.eql([ 303 ])
+                done()
+            })
+            var stanza = helper.getStanza('nickname-change')
+            muc.handle(stanza).should.be.true
+        })
+        
         it('Incoming room subject update', function(done) {
             socket.once('xmpp.muc.subject', function(message) {
                 message.room.should.equal('fire@coven.witches.lit')
