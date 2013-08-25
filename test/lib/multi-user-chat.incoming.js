@@ -2,8 +2,6 @@ var should        = require('should')
   , MultiUserChat = require('../../lib/multi-user-chat')
   , ltx           = require('ltx')
   , helper        = require('../helper')
-  , xhtmlIm       = require('xmpp-ftw/lib/utils/xep-0071')
-  , chatState     = require('xmpp-ftw/lib/utils/xep-0085')
 
 describe('Incoming stanzas', function() {
 
@@ -137,6 +135,40 @@ describe('Incoming stanzas', function() {
             var stanza = helper.getStanza('message-config')
             muc.handle(stanza).should.be.true
         })
+        
+        it('Incoming room subject update', function(done) {
+            socket.once('xmpp.muc.subject', function(message) {
+                message.room.should.equal('fire@coven.witches.lit')
+                message.subject.should.equal('Gathering around the fire')
+                done()
+            })
+            var stanza = helper.getStanza('message-subject')
+            muc.handle(stanza).should.be.true
+        })
+        
+        it('Incoming empty room subject update', function(done) {
+            socket.once('xmpp.muc.subject', function(message) {
+                message.room.should.equal('fire@coven.witches.lit')
+                message.subject.should.be.false
+                done()
+            })
+            var stanza = helper.getStanza('message-subject-empty')
+            muc.handle(stanza).should.be.true
+        })
+        
+        it('Handles a subject setting error', function(done) {
+            socket.once('xmpp.muc.error', function(error) {
+                error.type.should.equal('message')
+                error.error.condition.should.equal('forbidden')
+                error.error.type.should.equal('auth')
+                error.room.should.equal('fire@coven.witches.lit')
+                error.subject.should.equal('Gathering around the fire')
+                done()
+            })
+            var stanza = helper.getStanza('message-subject-error')
+            muc.handle(stanza).should.be.true
+        })
+        
     })
 
     it('Handles incoming presence stanzas', function(done) {

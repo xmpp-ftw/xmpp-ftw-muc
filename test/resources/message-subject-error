@@ -1,0 +1,10 @@
+<message
+    from='fire@coven.witches.lit'
+    id='1'
+    to='macbeth@example.com/castle'
+    type='error'>
+    <subject>Gathering around the fire</subject>
+    <error by='fire@coven.witches.lit' type='auth'>
+        <forbidden xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+    </error>
+</message>

@@ -1,0 +1,7 @@
+<message
+    from='fire@coven.witches.lit'
+    id='1'
+    to='macbeth@example.com/castle'
+    type='groupchat'>
+    <subject>Gathering around the fire</subject>
+</message>
