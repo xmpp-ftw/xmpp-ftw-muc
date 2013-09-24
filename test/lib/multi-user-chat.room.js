@@ -153,5 +153,22 @@ describe('MUC Rooms', function() {
         })
         
     })
+    
+    it('Handles destroy a room presence updates', function(done) {
+        var stanza = helper.getStanza('presence-destroy')
+        socket.on('xmpp.muc.roster', function(data) { 
+           data.room.should.equal('fire@coven.witches.lit')
+           data.nick.should.equal('cauldron')
+           data.status.should.equal('unavailable')
+           data.affiliation.should.equal('none')
+           data.role.should.equal('none')
+           data.destroy.should.eql({
+               alternative: 'chamber@chat.shakespeare.lit',
+               reason: 'The act is done'
+           })
+           done()
+        })
+        muc.handle(stanza).should.be.true
+    })
 
 })

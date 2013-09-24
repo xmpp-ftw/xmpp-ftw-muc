@@ -1,0 +1,11 @@
+<presence
+    from='fire@coven.witches.lit/cauldron'
+    to='macbeth@example.com/castle'
+    type='unavailable'>
+  <x xmlns='http://jabber.org/protocol/muc#user'>
+    <item affiliation='none' role='none'/>
+    <destroy jid='chamber@chat.shakespeare.lit'>
+      <reason>The act is done</reason>
+    </destroy>
+  </x>
+</presence>
