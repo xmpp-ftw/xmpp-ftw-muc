@@ -199,4 +199,16 @@ describe('Incoming stanzas', function() {
         var stanza = helper.getStanza('presence-join')
         muc.handle(stanza).should.be.true
     })
+    
+    it('Handles destroy a room presence updates', function(done) {
+        var stanza = helper.getStanza('presence-destroy')
+        socket.on('xmpp.muc.destroy', function(data) { 
+           data.room.should.equal('fire@coven.witches.lit')
+           data.alternative.should.equal('chamber@chat.shakespeare.lit')
+           data.reason.should.equal('The act is done')
+           done()
+        })
+        muc.handle(stanza).should.be.true
+    })
+
 })
