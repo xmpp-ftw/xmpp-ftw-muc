@@ -155,7 +155,7 @@ describe('MUC Rooms', function() {
         
     })
     
-    describe.only('Create a room', function() {
+    describe('Create a room', function() {
         
         it('Errors when no callback provided', function(done) {
             xmpp.once('stanza', function() {
@@ -205,7 +205,20 @@ describe('MUC Rooms', function() {
         })
         
         it('Errors if \'form\' provided and not valid', function(done) {
-            done('Not implemented yet')
+            var request = { room: 'fire@witches.coven.lit', form: true }
+            xmpp.once('stanza', function() {
+                done('Unexpected outgoing stanza')
+            })
+            var callback = function(error, success) {
+                should.not.exist(success)
+                error.type.should.equal('modify')
+                error.condition.should.equal('client-error')
+                error.description.should.equal("Badly formatted data form")
+                error.request.should.eql(request)
+                xmpp.removeAllListeners('stanza')
+                done()
+            }
+            socket.emit('xmpp.muc.create', request, callback)
         })
         
         it('Sends expected stanza', function(done) {
@@ -223,11 +236,42 @@ describe('MUC Rooms', function() {
                 x.children.length.should.equal(0)
                 done()
             })
-            socket.emit('xmpp.muc.create', request, function() {}) 
+            socket.emit('xmpp.muc.create', request, function() {})
         })
         
         it('Sends expected stanza with data form', function(done) {
-            done('Not implemented yet')
+            var request = { 
+                room: 'fire@coven.witches.lit',
+                form: [
+                    { var: 'muc#roomconfig_roomname', value: 'Campfire' },
+                    { var: 'muc#roomconfig_enablelogging', value: false }
+                ]
+            }
+            xmpp.once('stanza', function(stanza) {
+                var x = stanza
+                    .getChild('query', muc.NS_OWNER)
+                    .getChild('x', dataForm.NS)
+                
+                x.should.exist
+                x.attrs.type.should.equal('submit')
+                x.children.length.should.equal(3)
+                
+                x.children[0].getName().should.equal('field')
+                x.children[0].attrs.var.should.equal('FORM_TYPE')
+                x.children[0].getChildText('value')
+                   .should.equal('http://jabber.org/protocol/muc#roomconfig')
+        
+                x.children[1].attrs.var.should.equal(request.form[0].var)
+                x.children[1].getChildText('value')
+                    .should.equal(request.form[0].value)
+                
+                x.children[2].attrs.var.should.equal(request.form[1].var)
+                x.children[2].getChildText('value')
+                    .should.equal('false')
+                
+                done()
+            })
+            socket.emit('xmpp.muc.create', request, function() {})
         })
         
         it('Handles error response', function(done) {
