@@ -68,4 +68,5 @@ describe('Can join a MUC room', function() {
         })
         socket.emit('xmpp.muc.join', request)
     })
+
 })
