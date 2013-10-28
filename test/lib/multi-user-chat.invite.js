@@ -23,7 +23,7 @@ describe('Can invite a user to a MUC room', function() {
         muc = new MultiUserChat()
         muc.init(manager)
     })
-    
+
     describe('Can send invites', function() {
 
         it('Returns error if \'room\' key not provided', function(done) {
@@ -40,7 +40,7 @@ describe('Can invite a user to a MUC room', function() {
             })
             socket.emit('xmpp.muc.invite', {})
         })
-    
+
         it('Returns error if \'to\' key not provided', function(done) {
             xmpp.once('stanza', function() {
                 done('Unexpected outgoing stanza')
@@ -56,7 +56,7 @@ describe('Can invite a user to a MUC room', function() {
             var request = { room: 'fire@coven@witches.lit' }
             socket.emit('xmpp.muc.invite', request)
         })
-    
+
         it('Sends the expected stanza', function(done) {
             var request = {
                 room: 'fire@coven.witches.lit',
@@ -66,7 +66,7 @@ describe('Can invite a user to a MUC room', function() {
                 stanza.is('message').should.be.true
                 stanza.attrs.to.should.equal(request.room)
                 stanza.attrs.id.should.exist
-                
+
                 var invite = stanza.getChild('x', muc.NS_USER)
                     .getChild('invite')
                 invite.should.exist
@@ -75,7 +75,7 @@ describe('Can invite a user to a MUC room', function() {
             })
             socket.emit('xmpp.muc.invite', request)
         })
-        
+
         it('Sends expected stanza with reason', function(done) {
             var request = {
                 room: 'fire@coven.witches.lit',
@@ -86,28 +86,28 @@ describe('Can invite a user to a MUC room', function() {
                 stanza.is('message').should.be.true
                 stanza.attrs.to.should.equal(request.room)
                 stanza.attrs.id.should.exist
-                
+
                 stanza.getChild('x', muc.NS_USER)
                     .getChild('invite')
                     .getChildText('reason')
                     .should.equal(request.reason)
-    
+
                 done()
             })
             socket.emit('xmpp.muc.invite', request)
         })
-        
+
     })
-    
+
     describe('Handles invites', function() {
-        
+
       it('Handles invites', function() {
           muc.handles(helper.getStanza('invite')).should.be.true
       })
-          
+
       it('Sends event to user', function(done) {
           socket.once('xmpp.muc.invite', function(data) {
-              data.room.should.equal('fire@coven.witches.lit')
+            data.room.should.equal('room@muc.coven.witches.lit')
               data.from.should.eql({
                   domain: 'witches.lit',
                   user: 'witch1'
@@ -116,7 +116,7 @@ describe('Can invite a user to a MUC room', function() {
           })
           muc.handle(helper.getStanza('invite')).should.be.true
       })
-      
+
       it('Sends event to user with reason & password', function(done) {
           socket.once('xmpp.muc.invite', function(data) {
               data.reason.should.equal('Doth one wish to be King?')
@@ -126,7 +126,7 @@ describe('Can invite a user to a MUC room', function() {
           muc.handle(helper.getStanza('invite-with-reason-and-password'))
               .should.be.true
       })
-      
+
     })
 
 })
