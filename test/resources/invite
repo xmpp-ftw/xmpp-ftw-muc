@@ -1,4 +1,5 @@
 <message
+    from= "room@muc.coven.witches.lit"
     id="invite:1"
     to="fire@coven.witches.lit">
   <x xmlns="http://jabber.org/protocol/muc#user">
