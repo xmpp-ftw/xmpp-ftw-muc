@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha -R spec --recursive ./test/lib"
+    "test": "grunt test"
   },
   "repository": {
     "type": "git",
@@ -36,7 +36,10 @@
   "devDependencies": {
     "mocha": "~1.8.1",
     "should": "~1.2.2",
-    "xmpp-ftw": "*"
+    "xmpp-ftw": "*",
+    "grunt-mocha-cli": "~1.4.0",
+    "grunt": "~0.4.2",
+    "grunt-contrib-jshint": "~0.7.2"
   },
   "peerDependencies": {
     "xmpp-ftw": "0.x"
