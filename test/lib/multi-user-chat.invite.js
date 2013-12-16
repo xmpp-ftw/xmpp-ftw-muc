@@ -1,4 +1,4 @@
-var MultiUserChat = require('../../lib/multi-user-chat')
+var MultiUserChat = require('../../index')
   , helper        = require('../helper')
 
 require('should')

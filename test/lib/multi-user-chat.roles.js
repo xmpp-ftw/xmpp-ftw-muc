@@ -1,10 +1,10 @@
 var should        = require('should')
-  , MultiUserChat = require('../../lib/multi-user-chat')
+  , MultiUserChat = require('../../index')
   , ltx           = require('ltx')
   , helper        = require('../helper')
-  , xhtmlIm       = require('xmpp-ftw/lib/utils/xep-0071')
-  , chatState     = require('xmpp-ftw/lib/utils/xep-0085')
-  , dataForm      = require('xmpp-ftw/lib/utils/xep-0004')
+  , xhtmlIm       = require('xmpp-ftw').utils['xep-0071']
+  , chatState     = require('xmpp-ftw').utils['xep-0085']
+  , dataForm      = require('xmpp-ftw').utils['xep-0004']
 
 describe('Roles', function() {
 
@@ -309,7 +309,7 @@ describe('Roles', function() {
         })
 
     })
-    
+
     describe('Request voice', function() {
 
        it('Returns error if \'room\' key not provided', function(done) {
@@ -324,7 +324,7 @@ describe('Roles', function() {
             var request = {}
             socket.emit('xmpp.muc.voice', request)
         })
-    
+
         it('Errors if \'role\' not provided', function(done) {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
@@ -337,7 +337,7 @@ describe('Roles', function() {
             var request = { room: 'fire@witches.coven.lit' }
             socket.emit('xmpp.muc.voice', request)
         })
-    
+
         it('Sends expected stanza', function(done) {
             xmpp.once('stanza', function(stanza) {
                 stanza.is('message').should.be.true
@@ -346,21 +346,21 @@ describe('Roles', function() {
 
                 var x = stanza.getChild('x', dataForm.NS)
                 x.attrs.type.should.equal('submit')
-                
+
                 x.children.length.should.equal(2)
-                
+
                 x.children[0].getName().should.equal('field')
                 x.children[0].attrs.var.should.equal('FORM_TYPE')
                 x.children[0].getChildText('value')
                     .should.equal(muc.NS_REQUEST)
-                
+
                 x.children[1].getName().should.equal('field')
                 x.children[1].attrs.var.should.equal('muc#role')
                 x.children[1].attrs.type.should.equal('text-single')
                 x.children[1].attrs.label.should.equal('Requested role')
                 x.children[1].getChildText('value')
                     .should.equal(request.role)
-                
+
                 done()
             })
             var request = {

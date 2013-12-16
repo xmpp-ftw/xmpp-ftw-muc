@@ -1,5 +1,5 @@
 var should        = require('should')
-  , MultiUserChat = require('../../lib/multi-user-chat')
+  , MultiUserChat = require('../../index')
   , ltx           = require('ltx')
   , helper        = require('../helper')
 
@@ -103,7 +103,7 @@ describe('Incoming stanzas', function() {
             var stanza = helper.getStanza('message-delay')
             muc.handle(stanza).should.be.true
         })
-        
+
         it('Incoming XHTML message with chat state', function(done) {
             socket.once('xmpp.muc.message', function(message) {
                 message.content.should
@@ -114,7 +114,7 @@ describe('Incoming stanzas', function() {
             var stanza = helper.getStanza('message-xhtml-with-chat-state')
             muc.handle(stanza).should.be.true
         })
-        
+
         it('Incoming message with chat state', function(done) {
             socket.once('xmpp.muc.message', function(message) {
                 should.not.exist(message.content)
@@ -124,7 +124,7 @@ describe('Incoming stanzas', function() {
             var stanza = helper.getStanza('message-chat-state')
             muc.handle(stanza).should.be.true
         })
-        
+
         it('Incoming room status updates', function(done) {
             socket.once('xmpp.muc.room.config', function(message) {
                 message.room.should.equal('fire@coven.witches.lit')
@@ -135,7 +135,7 @@ describe('Incoming stanzas', function() {
             var stanza = helper.getStanza('message-config')
             muc.handle(stanza).should.be.true
         })
-        
+
         it('Incoming user nickname updates', function(done) {
             socket.once('xmpp.muc.roster', function(message) {
                 message.room.should.equal('fire@coven.witches.lit')
@@ -151,7 +151,7 @@ describe('Incoming stanzas', function() {
             var stanza = helper.getStanza('nickname-change')
             muc.handle(stanza).should.be.true
         })
-        
+
         it('Incoming room subject update', function(done) {
             socket.once('xmpp.muc.subject', function(message) {
                 message.room.should.equal('fire@coven.witches.lit')
@@ -161,7 +161,7 @@ describe('Incoming stanzas', function() {
             var stanza = helper.getStanza('message-subject')
             muc.handle(stanza).should.be.true
         })
-        
+
         it('Incoming empty room subject update', function(done) {
             socket.once('xmpp.muc.subject', function(message) {
                 message.room.should.equal('fire@coven.witches.lit')
@@ -171,7 +171,7 @@ describe('Incoming stanzas', function() {
             var stanza = helper.getStanza('message-subject-empty')
             muc.handle(stanza).should.be.true
         })
-        
+
         it('Handles a subject setting error', function(done) {
             socket.once('xmpp.muc.error', function(error) {
                 error.type.should.equal('message')
@@ -184,7 +184,7 @@ describe('Incoming stanzas', function() {
             var stanza = helper.getStanza('message-subject-error')
             muc.handle(stanza).should.be.true
         })
-        
+
     })
 
     it('Handles incoming presence stanzas', function(done) {
@@ -199,10 +199,10 @@ describe('Incoming stanzas', function() {
         var stanza = helper.getStanza('presence-join')
         muc.handle(stanza).should.be.true
     })
-    
+
     it('Handles destroy a room presence updates', function(done) {
         var stanza = helper.getStanza('presence-destroy')
-        socket.on('xmpp.muc.destroy', function(data) { 
+        socket.on('xmpp.muc.destroy', function(data) {
            data.room.should.equal('fire@coven.witches.lit')
            data.alternative.should.equal('chamber@chat.shakespeare.lit')
            data.reason.should.equal('The act is done')

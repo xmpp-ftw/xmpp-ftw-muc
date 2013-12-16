@@ -1,9 +1,9 @@
 var should        = require('should')
-  , MultiUserChat = require('../../lib/multi-user-chat')
+  , MultiUserChat = require('../../index')
   , ltx           = require('ltx')
   , helper        = require('../helper')
-  , xhtmlIm       = require('xmpp-ftw/lib/utils/xep-0071')
-  , chatState     = require('xmpp-ftw/lib/utils/xep-0085')
+  , xhtmlIm       = require('xmpp-ftw').utils['xep-0071']
+  , chatState     = require('xmpp-ftw').utils['xep-0085']
 
 describe('MultiUserChat', function() {
 

@@ -1,9 +1,9 @@
 var should        = require('should')
-  , MultiUserChat = require('../../lib/multi-user-chat')
+  , MultiUserChat = require('../../index')
   , ltx           = require('ltx')
   , helper        = require('../helper')
-  , xhtmlIm       = require('xmpp-ftw/lib/utils/xep-0071')
-  , chatState     = require('xmpp-ftw/lib/utils/xep-0085')
+  , xhtmlIm       = require('xmpp-ftw').utils['xep-0071']
+  , chatState     = require('xmpp-ftw').utils['xep-0085']
 
 describe('Sending a message', function() {
 
@@ -116,7 +116,7 @@ describe('Sending a message', function() {
         muc.rooms.push(request.room)
         socket.emit('xmpp.muc.message', request)
     })
-    
+
     it('Sends expected stanza with chat state only', function(done) {
         xmpp.once('stanza', function(stanza) {
             stanza.attrs.to.should.equal(request.room)
@@ -132,7 +132,7 @@ describe('Sending a message', function() {
         muc.rooms.push(request.room)
         socket.emit('xmpp.muc.message', request)
     })
-    
+
     it('Sends expected direct message', function(done) {
         xmpp.once('stanza', function(stanza) {
             stanza.attrs.to.should.equal(request.room + '/' + request.to)

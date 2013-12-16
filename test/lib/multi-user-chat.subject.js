@@ -1,5 +1,5 @@
 var should        = require('should')
-  , MultiUserChat = require('../../lib/multi-user-chat')
+  , MultiUserChat = require('../../index')
   , helper        = require('../helper')
 
 describe('MultiUserChat', function() {
@@ -27,7 +27,7 @@ describe('MultiUserChat', function() {
         xmpp.once('stanza', function() {
             done('Unexpected outgoing stanza')
         })
-        
+
         socket.once('xmpp.error.client', function(error) {
             error.type.should.equal('modify')
             error.condition.should.equal('client-error')
@@ -39,7 +39,7 @@ describe('MultiUserChat', function() {
         var request = {}
         socket.emit('xmpp.muc.subject', request)
     })
-    
+
     it('Sends expected stanza with subject text', function(done) {
         xmpp.once('stanza', function(stanza) {
             stanza.is('message').should.be.true
@@ -60,7 +60,7 @@ describe('MultiUserChat', function() {
             request
         )
     })
-    
+
     it('Sends expected stanza without subject', function(done) {
         xmpp.once('stanza', function(stanza) {
             stanza.is('message').should.be.true
@@ -81,5 +81,5 @@ describe('MultiUserChat', function() {
             request
         )
     })
-    
+
 })

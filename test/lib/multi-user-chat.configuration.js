@@ -1,10 +1,10 @@
 var should        = require('should')
-  , MultiUserChat = require('../../lib/multi-user-chat')
+  , MultiUserChat = require('../../index')
   , ltx           = require('ltx')
   , helper        = require('../helper')
-  , xhtmlIm       = require('xmpp-ftw/lib/utils/xep-0071')
-  , chatState     = require('xmpp-ftw/lib/utils/xep-0085')
-  , dataForm      = require('xmpp-ftw/lib/utils/xep-0004')
+  , xhtmlIm       = require('xmpp-ftw').utils['xep-0071']
+  , chatState     = require('xmpp-ftw').utils['xep-0085']
+  , dataForm      = require('xmpp-ftw').utils['xep-0004']
 
 describe('Room configuration', function() {
 
@@ -275,9 +275,9 @@ describe('Room configuration', function() {
         })
 
     })
-    
+
     describe('Cancel a configuration change/creation', function() {
-        
+
         it('Errors when no callback provided', function(done) {
             xmpp.once('stanza', function() {
                 done('Unexpected outgoing stanza')
@@ -307,7 +307,7 @@ describe('Room configuration', function() {
             })
             socket.emit('xmpp.muc.cancel', {}, true)
         })
-        
+
 
         it('Errors if \'room\' key missing', function(done) {
             xmpp.once('stanza', function() {
@@ -324,7 +324,7 @@ describe('Room configuration', function() {
             }
             socket.emit('xmpp.muc.cancel', {}, callback)
         })
-        
+
         it('Sends expected stanza', function(done) {
             var request = { room: 'fire@coven.witches.lit' }
             xmpp.once('stanza', function(stanza) {
@@ -342,7 +342,7 @@ describe('Room configuration', function() {
             })
             socket.emit('xmpp.muc.cancel', request, function() {})
         })
-        
+
         it('Handles error response', function(done) {
             var request = { room: 'fire@coven.witches.lit' }
             xmpp.once('stanza', function() {
@@ -358,7 +358,7 @@ describe('Room configuration', function() {
             }
             socket.emit('xmpp.muc.cancel', request, callback)
         })
-        
+
         it('Handes success response', function(done) {
             var request = { room: 'fire@coven.witches.lit' }
             xmpp.once('stanza', function() {
@@ -371,7 +371,7 @@ describe('Room configuration', function() {
             }
             socket.emit('xmpp.muc.cancel', request, callback)
         })
-    
+
     })
 
 })

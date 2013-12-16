@@ -1,7 +1,7 @@
 var should        = require('should')
-  , MultiUserChat = require('../../lib/multi-user-chat')
+  , MultiUserChat = require('../../index')
   , helper        = require('../helper')
-  , dataForm      = require('xmpp-ftw/lib/utils/xep-0004')
+  , dataForm      = require('xmpp-ftw').utils['xep-0004']
 
 describe('MUC Rooms', function() {
 
@@ -23,9 +23,9 @@ describe('MUC Rooms', function() {
         muc = new MultiUserChat()
         muc.init(manager)
     })
-    
+
     describe('Destroy a room', function() {
-        
+
         it('Errors when no callback provided', function(done) {
             xmpp.once('stanza', function() {
                 done('Unexpected outgoing stanza')
@@ -71,7 +71,7 @@ describe('MUC Rooms', function() {
             }
             socket.emit('xmpp.muc.destroy', {}, callback)
         })
-        
+
         it('Sends expected stanza', function(done) {
             var room = 'fire@coven.witches.lit'
             xmpp.once('stanza', function(stanza) {
@@ -90,7 +90,7 @@ describe('MUC Rooms', function() {
                 function() {}
             )
         })
-        
+
         it('Sends expected stanza with reason/alternative', function(done) {
             var request = {
                 room: 'fire@coven.witches.lit',
@@ -135,7 +135,7 @@ describe('MUC Rooms', function() {
                 callback
             )
         })
-        
+
         it('Handles success response', function(done) {
             var room = 'fire@coven.witches.lit'
             xmpp.once('stanza', function() {
@@ -152,11 +152,11 @@ describe('MUC Rooms', function() {
                 callback
             )
         })
-        
+
     })
-    
+
     describe('Create a room', function() {
-        
+
         it('Errors when no callback provided', function(done) {
             xmpp.once('stanza', function() {
                 done('Unexpected outgoing stanza')
@@ -186,7 +186,7 @@ describe('MUC Rooms', function() {
             })
             socket.emit('xmpp.muc.create', {}, true)
         })
-        
+
 
         it('Errors if \'room\' key missing', function(done) {
             xmpp.once('stanza', function() {
@@ -203,7 +203,7 @@ describe('MUC Rooms', function() {
             }
             socket.emit('xmpp.muc.create', {}, callback)
         })
-        
+
         it('Errors if \'form\' provided and not valid', function(done) {
             var request = { room: 'fire@witches.coven.lit', form: true }
             xmpp.once('stanza', function() {
@@ -220,7 +220,7 @@ describe('MUC Rooms', function() {
             }
             socket.emit('xmpp.muc.create', request, callback)
         })
-        
+
         it('Sends expected stanza', function(done) {
             var request = { room: 'fire@coven.witches.lit' }
             xmpp.once('stanza', function(stanza) {
@@ -238,9 +238,9 @@ describe('MUC Rooms', function() {
             })
             socket.emit('xmpp.muc.create', request, function() {})
         })
-        
+
         it('Sends expected stanza with data form', function(done) {
-            var request = { 
+            var request = {
                 room: 'fire@coven.witches.lit',
                 form: [
                     { var: 'muc#roomconfig_roomname', value: 'Campfire' },
@@ -251,29 +251,29 @@ describe('MUC Rooms', function() {
                 var x = stanza
                     .getChild('query', muc.NS_OWNER)
                     .getChild('x', dataForm.NS)
-                
+
                 x.should.exist
                 x.attrs.type.should.equal('submit')
                 x.children.length.should.equal(3)
-                
+
                 x.children[0].getName().should.equal('field')
                 x.children[0].attrs.var.should.equal('FORM_TYPE')
                 x.children[0].getChildText('value')
                    .should.equal('http://jabber.org/protocol/muc#roomconfig')
-        
+
                 x.children[1].attrs.var.should.equal(request.form[0].var)
                 x.children[1].getChildText('value')
                     .should.equal(request.form[0].value)
-                
+
                 x.children[2].attrs.var.should.equal(request.form[1].var)
                 x.children[2].getChildText('value')
                     .should.equal('false')
-                
+
                 done()
             })
             socket.emit('xmpp.muc.create', request, function() {})
         })
-        
+
         it('Handles error response', function(done) {
             var request = { room: 'fire@coven.witches.lit' }
             xmpp.once('stanza', function() {
@@ -289,7 +289,7 @@ describe('MUC Rooms', function() {
             }
             socket.emit('xmpp.muc.create', request, callback)
         })
-        
+
         it('Handes success response', function(done) {
             var request = { room: 'fire@coven.witches.lit' }
             xmpp.once('stanza', function() {
@@ -302,7 +302,7 @@ describe('MUC Rooms', function() {
             }
             socket.emit('xmpp.muc.create', request, callback)
         })
-        
+
     })
 
 })
