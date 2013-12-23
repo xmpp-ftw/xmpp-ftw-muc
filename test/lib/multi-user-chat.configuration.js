@@ -1,9 +1,10 @@
+'use strict';
+
+/* jshint -W030 */
+
 var should        = require('should')
   , MultiUserChat = require('../../index')
-  , ltx           = require('ltx')
   , helper        = require('../helper')
-  , xhtmlIm       = require('xmpp-ftw').utils['xep-0071']
-  , chatState     = require('xmpp-ftw').utils['xep-0085']
   , dataForm      = require('xmpp-ftw').utils['xep-0004']
 
 describe('Room configuration', function() {
@@ -36,7 +37,7 @@ describe('Room configuration', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -51,7 +52,7 @@ describe('Room configuration', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -67,7 +68,7 @@ describe('Room configuration', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'room' key")
+                error.description.should.equal('Missing \'room\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -79,12 +80,12 @@ describe('Room configuration', function() {
         it('Handles error response stanza', function(done) {
             var room = 'fire@coven.witches.lit'
             xmpp.once('stanza', function(stanza) {
-                 stanza.is('iq').should.be.true
-                 stanza.attrs.type.should.equal('get')
-                 stanza.attrs.to.should.equal(room)
-                 should.exist(stanza.attrs.id)
-                 stanza.getChild('query', muc.NS_OWNER).should.exist
-                 manager.makeCallback(helper.getStanza('iq-error'))
+                stanza.is('iq').should.be.true
+                stanza.attrs.type.should.equal('get')
+                stanza.attrs.to.should.equal(room)
+                should.exist(stanza.attrs.id)
+                stanza.getChild('query', muc.NS_OWNER).should.exist
+                manager.makeCallback(helper.getStanza('iq-error'))
             })
             var callback = function(error, success) {
                 should.not.exist(success)
@@ -104,12 +105,12 @@ describe('Room configuration', function() {
         it('Returns room configuration', function(done) {
             var room = 'fire@coven.witches.lit'
             xmpp.once('stanza', function(stanza) {
-                 stanza.is('iq').should.be.true
-                 stanza.attrs.type.should.equal('get')
-                 stanza.attrs.to.should.equal(room)
-                 should.exist(stanza.attrs.id)
-                 stanza.getChild('query', muc.NS_OWNER).should.exist
-                 manager.makeCallback(helper.getStanza('config-get-result'))
+                stanza.is('iq').should.be.true
+                stanza.attrs.type.should.equal('get')
+                stanza.attrs.to.should.equal(room)
+                should.exist(stanza.attrs.id)
+                stanza.getChild('query', muc.NS_OWNER).should.exist
+                manager.makeCallback(helper.getStanza('config-get-result'))
             })
             var callback = function(error, data) {
                 should.not.exist(error)
@@ -143,7 +144,7 @@ describe('Room configuration', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -158,7 +159,7 @@ describe('Room configuration', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -174,7 +175,7 @@ describe('Room configuration', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'room' key")
+                error.description.should.equal('Missing \'room\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -191,7 +192,7 @@ describe('Room configuration', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'form' key")
+                error.description.should.equal('Missing \'form\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -208,7 +209,7 @@ describe('Room configuration', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Badly formatted data form")
+                error.description.should.equal('Badly formatted data form')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -220,12 +221,12 @@ describe('Room configuration', function() {
         it('Handles error response stanza', function(done) {
             var room = 'fire@coven.witches.lit'
             xmpp.once('stanza', function(stanza) {
-                 stanza.is('iq').should.be.true
-                 stanza.attrs.type.should.equal('set')
-                 stanza.attrs.to.should.equal(room)
-                 should.exist(stanza.attrs.id)
-                 stanza.getChild('query', muc.NS_OWNER).should.exist
-                 manager.makeCallback(helper.getStanza('iq-error'))
+                stanza.is('iq').should.be.true
+                stanza.attrs.type.should.equal('set')
+                stanza.attrs.to.should.equal(room)
+                should.exist(stanza.attrs.id)
+                stanza.getChild('query', muc.NS_OWNER).should.exist
+                manager.makeCallback(helper.getStanza('iq-error'))
             })
             var callback = function(error, success) {
                 should.not.exist(success)
@@ -248,19 +249,19 @@ describe('Room configuration', function() {
                 form: []
             }
             xmpp.once('stanza', function(stanza) {
-                 stanza.is('iq').should.be.true
-                 stanza.attrs.type.should.equal('set')
-                 stanza.attrs.to.should.equal(request.room)
-                 should.exist(stanza.attrs.id)
-                 stanza.getChild('query', muc.NS_OWNER).should.exist
-                 var x = stanza.getChild('query').getChild('x')
-                 x.attrs.xmlns.should.equal('jabber:x:data')
-                 x.attrs.type.should.equal('submit')
-                 x.children.length.should.equal(1)
-                 x.children[0].attrs.var.should.equal('FORM_TYPE')
-                 x.children[0].getChild('value').getText()
-                     .should.equal(muc.NS_CONFIG)
-                 manager.makeCallback(helper.getStanza('iq-result'))
+                stanza.is('iq').should.be.true
+                stanza.attrs.type.should.equal('set')
+                stanza.attrs.to.should.equal(request.room)
+                should.exist(stanza.attrs.id)
+                stanza.getChild('query', muc.NS_OWNER).should.exist
+                var x = stanza.getChild('query').getChild('x')
+                x.attrs.xmlns.should.equal('jabber:x:data')
+                x.attrs.type.should.equal('submit')
+                x.children.length.should.equal(1)
+                x.children[0].attrs.var.should.equal('FORM_TYPE')
+                x.children[0].getChild('value').getText()
+                    .should.equal(muc.NS_CONFIG)
+                manager.makeCallback(helper.getStanza('iq-result'))
             })
             var callback = function(error, data) {
                 should.not.exist(error)
@@ -285,7 +286,7 @@ describe('Room configuration', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -300,7 +301,7 @@ describe('Room configuration', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -317,7 +318,7 @@ describe('Room configuration', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'room' key")
+                error.description.should.equal('Missing \'room\' key')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()

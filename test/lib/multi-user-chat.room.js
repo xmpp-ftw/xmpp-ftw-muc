@@ -1,3 +1,7 @@
+'use strict';
+
+/* jshint -W030 */
+
 var should        = require('should')
   , MultiUserChat = require('../../index')
   , helper        = require('../helper')
@@ -33,7 +37,7 @@ describe('MUC Rooms', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -48,7 +52,7 @@ describe('MUC Rooms', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -64,7 +68,7 @@ describe('MUC Rooms', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'room' key")
+                error.description.should.equal('Missing \'room\' key')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -164,7 +168,7 @@ describe('MUC Rooms', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -179,7 +183,7 @@ describe('MUC Rooms', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -196,7 +200,7 @@ describe('MUC Rooms', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'room' key")
+                error.description.should.equal('Missing \'room\' key')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -213,7 +217,7 @@ describe('MUC Rooms', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Badly formatted data form")
+                error.description.should.equal('Badly formatted data form')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()

@@ -1,9 +1,10 @@
+'use strict';
+
+/* jshint -W030 */
+
 var should        = require('should')
   , MultiUserChat = require('../../index')
-  , ltx           = require('ltx')
   , helper        = require('../helper')
-  , xhtmlIm       = require('xmpp-ftw').utils['xep-0071']
-  , chatState     = require('xmpp-ftw').utils['xep-0085']
 
 describe('Affiliation updates', function() {
 
@@ -42,7 +43,7 @@ describe('Affiliation updates', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -57,7 +58,7 @@ describe('Affiliation updates', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -73,7 +74,7 @@ describe('Affiliation updates', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'room' key")
+                error.description.should.equal('Missing \'room\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -90,7 +91,7 @@ describe('Affiliation updates', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'jid' key")
+                error.description.should.equal('Missing \'jid\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -107,7 +108,7 @@ describe('Affiliation updates', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'affiliation' key")
+                error.description.should.equal('Missing \'affiliation\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()

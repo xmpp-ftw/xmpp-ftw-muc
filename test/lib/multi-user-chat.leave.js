@@ -1,9 +1,9 @@
-var should        = require('should')
-  , MultiUserChat = require('../../index')
-  , ltx           = require('ltx')
+'use strict';
+
+/* jshint -W030 */
+
+var MultiUserChat = require('../../index')
   , helper        = require('../helper')
-  , xhtmlIm       = require('xmpp-ftw').utils['xep-0071']
-  , chatState     = require('xmpp-ftw').utils['xep-0085']
 
 describe('Can leave a room', function() {
 
@@ -33,7 +33,7 @@ describe('Can leave a room', function() {
         socket.once('xmpp.error.client', function(error) {
             error.type.should.equal('modify')
             error.condition.should.equal('client-error')
-            error.description.should.equal("Missing 'room' key")
+            error.description.should.equal('Missing \'room\' key')
             error.request.should.eql(request)
             xmpp.removeAllListeners('stanza')
             done()
@@ -49,7 +49,7 @@ describe('Can leave a room', function() {
         socket.once('xmpp.error.client', function(error) {
             error.type.should.equal('modify')
             error.condition.should.equal('client-error')
-            error.description.should.equal("Not registered with this room")
+            error.description.should.equal('Not registered with this room')
             error.request.should.eql(request)
             xmpp.removeAllListeners('stanza')
             done()

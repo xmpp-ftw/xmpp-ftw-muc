@@ -1,9 +1,10 @@
+'use strict';
+
+/* jshint -W030 */
+
 var should        = require('should')
   , MultiUserChat = require('../../index')
-  , ltx           = require('ltx')
   , helper        = require('../helper')
-  , xhtmlIm       = require('xmpp-ftw').utils['xep-0071']
-  , chatState     = require('xmpp-ftw').utils['xep-0085']
   , dataForm      = require('xmpp-ftw').utils['xep-0004']
 
 describe('Roles', function() {
@@ -36,7 +37,7 @@ describe('Roles', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -51,7 +52,7 @@ describe('Roles', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -67,7 +68,7 @@ describe('Roles', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'room' key")
+                error.description.should.equal('Missing \'room\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -85,7 +86,7 @@ describe('Roles', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'nick' key")
+                error.description.should.equal('Missing \'nick\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -101,7 +102,7 @@ describe('Roles', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'role' key")
+                error.description.should.equal('Missing \'role\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -183,7 +184,7 @@ describe('Roles', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -198,7 +199,7 @@ describe('Roles', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -214,7 +215,7 @@ describe('Roles', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'room' key")
+                error.description.should.equal('Missing \'room\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -231,7 +232,7 @@ describe('Roles', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'role' key")
+                error.description.should.equal('Missing \'role\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -312,11 +313,11 @@ describe('Roles', function() {
 
     describe('Request voice', function() {
 
-       it('Returns error if \'room\' key not provided', function(done) {
+        it('Returns error if \'room\' key not provided', function(done) {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'room' key")
+                error.description.should.equal('Missing \'room\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -329,7 +330,7 @@ describe('Roles', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'role' key")
+                error.description.should.equal('Missing \'role\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()

@@ -1,3 +1,7 @@
+'use strict';
+
+/* jshint -W030 */
+
 var MultiUserChat = require('../../index')
   , helper        = require('../helper')
 
@@ -33,7 +37,7 @@ describe('Can invite a user to a MUC room', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'room' key")
+                error.description.should.equal('Missing \'room\' key')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -48,7 +52,7 @@ describe('Can invite a user to a MUC room', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'to' key")
+                error.description.should.equal('Missing \'to\' key')
                 error.request.should.eql(request)
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -101,31 +105,31 @@ describe('Can invite a user to a MUC room', function() {
 
     describe('Handles invites', function() {
 
-      it('Handles invites', function() {
-          muc.handles(helper.getStanza('invite')).should.be.true
-      })
+        it('Handles invites', function() {
+            muc.handles(helper.getStanza('invite')).should.be.true
+        })
 
-      it('Sends event to user', function(done) {
-          socket.once('xmpp.muc.invite', function(data) {
-            data.room.should.equal('room@muc.coven.witches.lit')
-              data.from.should.eql({
-                  domain: 'witches.lit',
-                  user: 'witch1'
-              })
-              done()
-          })
-          muc.handle(helper.getStanza('invite')).should.be.true
-      })
+        it('Sends event to user', function(done) {
+            socket.once('xmpp.muc.invite', function(data) {
+                data.room.should.equal('room@muc.coven.witches.lit')
+                data.from.should.eql({
+                    domain: 'witches.lit',
+                    user: 'witch1'
+                })
+                done()
+            })
+            muc.handle(helper.getStanza('invite')).should.be.true
+        })
 
-      it('Sends event to user with reason & password', function(done) {
-          socket.once('xmpp.muc.invite', function(data) {
-              data.reason.should.equal('Doth one wish to be King?')
-              data.password.should.equal('blood')
-              done()
-          })
-          muc.handle(helper.getStanza('invite-with-reason-and-password'))
+        it('Sends event to user with reason & password', function(done) {
+            socket.once('xmpp.muc.invite', function(data) {
+                data.reason.should.equal('Doth one wish to be King?')
+                data.password.should.equal('blood')
+                done()
+            })
+            muc.handle(helper.getStanza('invite-with-reason-and-password'))
               .should.be.true
-      })
+        })
 
     })
 

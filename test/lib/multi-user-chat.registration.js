@@ -1,9 +1,10 @@
+'use strict';
+
+/* jshint -W030 */
+
 var should        = require('should')
   , MultiUserChat = require('../../index')
-  , ltx           = require('ltx')
   , helper        = require('../helper')
-  , xhtmlIm       = require('xmpp-ftw').utils['xep-0071']
-  , chatState     = require('xmpp-ftw').utils['xep-0085']
 
 describe('Register with a room', function() {
 
@@ -35,7 +36,7 @@ describe('Register with a room', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -50,7 +51,7 @@ describe('Register with a room', function() {
             socket.once('xmpp.error.client', function(error) {
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing callback")
+                error.description.should.equal('Missing callback')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -66,7 +67,7 @@ describe('Register with a room', function() {
                 should.not.exist(success)
                 error.type.should.equal('modify')
                 error.condition.should.equal('client-error')
-                error.description.should.equal("Missing 'room' key")
+                error.description.should.equal('Missing \'room\' key')
                 error.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
@@ -102,14 +103,14 @@ describe('Register with a room', function() {
         it('Handles already registered', function(done) {
             var room = 'fire@coven.witches.lit'
             xmpp.once('stanza', function(stanza) {
-                 stanza.is('iq').should.be.true
-                 stanza.attrs.type.should.equal('get')
-                 stanza.attrs.to.should.equal(room)
-                 should.exist(stanza.attrs.id)
-                 stanza.getChild('query', muc.NS_REGISTER).should.exist
-                 manager.makeCallback(
-                     helper.getStanza('registration-registered')
-                 )
+                stanza.is('iq').should.be.true
+                stanza.attrs.type.should.equal('get')
+                stanza.attrs.to.should.equal(room)
+                should.exist(stanza.attrs.id)
+                stanza.getChild('query', muc.NS_REGISTER).should.exist
+                manager.makeCallback(
+                    helper.getStanza('registration-registered')
+                )
             })
             var callback = function(error, success) {
                 should.not.exist(error)
@@ -127,14 +128,14 @@ describe('Register with a room', function() {
         it('Returns registration information', function(done) {
             var room = 'fire@coven.witches.lit'
             xmpp.once('stanza', function(stanza) {
-                 stanza.is('iq').should.be.true
-                 stanza.attrs.type.should.equal('get')
-                 stanza.attrs.to.should.equal(room)
-                 should.exist(stanza.attrs.id)
-                 stanza.getChild('query', muc.NS_REGISTER).should.exist
-                 manager.makeCallback(
-                     helper.getStanza('registration-info')
-                 )
+                stanza.is('iq').should.be.true
+                stanza.attrs.type.should.equal('get')
+                stanza.attrs.to.should.equal(room)
+                should.exist(stanza.attrs.id)
+                stanza.getChild('query', muc.NS_REGISTER).should.exist
+                manager.makeCallback(
+                    helper.getStanza('registration-info')
+                )
             })
             var callback = function(error, success) {
                 should.not.exist(error)
@@ -148,10 +149,10 @@ describe('Register with a room', function() {
                     .should.equal('Fire Chat Registration')
                 success.form.fields.length.should.equal(2)
                 success.form.fields[0].should.eql({
-                   var: 'muc#register_name',
-                   type: 'text-single',
-                   required: true,
-                   label: 'Name'
+                    var: 'muc#register_name',
+                    type: 'text-single',
+                    required: true,
+                    label: 'Name'
                 })
                 success.form.fields[1].label.should.equal('Nickname')
                 done()
@@ -168,14 +169,14 @@ describe('Register with a room', function() {
     it('Handles direct registration', function(done) {
         var room = 'fire@coven.witches.lit'
         xmpp.once('stanza', function(stanza) {
-             stanza.is('iq').should.be.true
-             stanza.attrs.type.should.equal('set')
-             stanza.attrs.to.should.equal(room)
-             should.exist(stanza.attrs.id)
-             stanza.getChild('query', muc.NS_REGISTER).should.exist
-             manager.makeCallback(
-                 helper.getStanza('registration-registered')
-             )
+            stanza.is('iq').should.be.true
+            stanza.attrs.type.should.equal('set')
+            stanza.attrs.to.should.equal(room)
+            should.exist(stanza.attrs.id)
+            stanza.getChild('query', muc.NS_REGISTER).should.exist
+            manager.makeCallback(
+                helper.getStanza('registration-registered')
+            )
         })
         var callback = function(error, success) {
             should.not.exist(error)

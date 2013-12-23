@@ -1,6 +1,9 @@
+'use strict';
+
+/* jshint -W030 */
+
 var should        = require('should')
   , MultiUserChat = require('../../index')
-  , ltx           = require('ltx')
   , helper        = require('../helper')
   , xhtmlIm       = require('xmpp-ftw').utils['xep-0071']
   , chatState     = require('xmpp-ftw').utils['xep-0085']
@@ -39,7 +42,7 @@ describe('Sending a message', function() {
         socket.once('xmpp.error.client', function(error) {
             error.type.should.equal('modify')
             error.condition.should.equal('client-error')
-            error.description.should.equal("Missing 'room' key")
+            error.description.should.equal('Missing \'room\' key')
             error.request.should.eql(request)
             xmpp.removeAllListeners('stanza')
             done()
@@ -55,7 +58,7 @@ describe('Sending a message', function() {
         socket.once('xmpp.error.client', function(error) {
             error.type.should.equal('modify')
             error.condition.should.equal('client-error')
-            error.description.should.equal("Not registered with this room")
+            error.description.should.equal('Not registered with this room')
             error.request.should.eql(request)
             xmpp.removeAllListeners('stanza')
             done()
@@ -74,7 +77,7 @@ describe('Sending a message', function() {
             error.description
                 .should.equal('Message content or chat state not provided')
             var expectedErrorRequest = {
-                room: "fire@witches.coven.lit"
+                room: 'fire@witches.coven.lit'
             }
             error.request.should.eql(expectedErrorRequest)
             xmpp.removeAllListeners('stanza')
@@ -88,7 +91,7 @@ describe('Sending a message', function() {
     it('Sends expected stanza', function(done) {
         xmpp.once('stanza', function(stanza) {
             stanza.attrs.to.should.equal(request.room)
-            stanza.attrs.type.should.equal("groupchat")
+            stanza.attrs.type.should.equal('groupchat')
             stanza.getChild('body').getText().should.equal('some content')
             done()
         })
@@ -103,7 +106,7 @@ describe('Sending a message', function() {
     it('Sends expected stanza with chat state', function(done) {
         xmpp.once('stanza', function(stanza) {
             stanza.attrs.to.should.equal(request.room)
-            stanza.attrs.type.should.equal("groupchat")
+            stanza.attrs.type.should.equal('groupchat')
             stanza.getChild('body').getText().should.equal('some content')
             stanza.getChild('active', chatState.NS).should.exist
             done()
@@ -120,7 +123,7 @@ describe('Sending a message', function() {
     it('Sends expected stanza with chat state only', function(done) {
         xmpp.once('stanza', function(stanza) {
             stanza.attrs.to.should.equal(request.room)
-            stanza.attrs.type.should.equal("groupchat")
+            stanza.attrs.type.should.equal('groupchat')
             should.not.exist(stanza.getChild('body'))
             stanza.getChild('active', chatState.NS).should.exist
             done()

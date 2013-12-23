@@ -1,3 +1,7 @@
+'use strict';
+
+/* jshint -W030 */
+
 var should        = require('should')
   , MultiUserChat = require('../../index')
   , ltx           = require('ltx')
@@ -203,10 +207,10 @@ describe('Incoming stanzas', function() {
     it('Handles destroy a room presence updates', function(done) {
         var stanza = helper.getStanza('presence-destroy')
         socket.on('xmpp.muc.destroy', function(data) {
-           data.room.should.equal('fire@coven.witches.lit')
-           data.alternative.should.equal('chamber@chat.shakespeare.lit')
-           data.reason.should.equal('The act is done')
-           done()
+            data.room.should.equal('fire@coven.witches.lit')
+            data.alternative.should.equal('chamber@chat.shakespeare.lit')
+            data.reason.should.equal('The act is done')
+            done()
         })
         muc.handle(stanza).should.be.true
     })
