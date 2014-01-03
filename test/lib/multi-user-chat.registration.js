@@ -11,8 +11,8 @@ describe('Register with a room', function() {
     var muc, socket, xmpp, manager
 
     before(function() {
-        socket = new helper.Eventer()
-        xmpp = new helper.Eventer()
+        socket = new helper.SocketEventer()
+        xmpp = new helper.XmppEventer()
         manager = {
             socket: socket,
             client: xmpp,
@@ -24,6 +24,12 @@ describe('Register with a room', function() {
             }
         }
         muc = new MultiUserChat()
+        muc.init(manager)
+    })
+
+    beforeEach(function() {
+        socket.removeAllListeners()
+        xmpp.removeAllListeners()
         muc.init(manager)
     })
 
@@ -41,7 +47,7 @@ describe('Register with a room', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.register.info', {})
+            socket.send('xmpp.muc.register.info', {})
         })
 
         it('Errors when non-function callback provided', function(done) {
@@ -56,7 +62,7 @@ describe('Register with a room', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.register.info', {}, true)
+            socket.send('xmpp.muc.register.info', {}, true)
         })
 
         it('Errors if \'room\' key missing', function(done) {
@@ -72,7 +78,7 @@ describe('Register with a room', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             }
-            socket.emit('xmpp.muc.register.info', {}, callback)
+            socket.send('xmpp.muc.register.info', {}, callback)
         })
 
         it('Handles error response stanza', function(done) {
@@ -93,7 +99,7 @@ describe('Register with a room', function() {
                 })
                 done()
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.register.info',
                 { room: room },
                 callback
@@ -118,7 +124,7 @@ describe('Register with a room', function() {
                 success.nick.should.equal('notofwomanborn')
                 done()
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.register.info',
                 { room: room },
                 callback
@@ -157,7 +163,7 @@ describe('Register with a room', function() {
                 success.form.fields[1].label.should.equal('Nickname')
                 done()
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.register.info',
                 { room: room, form: [] },
                 callback
@@ -184,7 +190,7 @@ describe('Register with a room', function() {
             success.nick.should.equal('notofwomanborn')
             done()
         }
-        socket.emit(
+        socket.send(
             'xmpp.muc.register',
             { room: room, form: [] },
             callback

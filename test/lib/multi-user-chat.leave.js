@@ -10,8 +10,8 @@ describe('Can leave a room', function() {
     var muc, socket, xmpp, manager
 
     before(function() {
-        socket = new helper.Eventer()
-        xmpp = new helper.Eventer()
+        socket = new helper.SocketEventer()
+        xmpp = new helper.XmppEventer()
         manager = {
             socket: socket,
             client: xmpp,
@@ -23,6 +23,12 @@ describe('Can leave a room', function() {
             }
         }
         muc = new MultiUserChat()
+        muc.init(manager)
+    })
+
+    beforeEach(function() {
+        socket.removeAllListeners()
+        xmpp.removeAllListeners()
         muc.init(manager)
     })
 
@@ -39,7 +45,7 @@ describe('Can leave a room', function() {
             done()
         })
         var request = {}
-        socket.emit('xmpp.muc.leave', request)
+        socket.send('xmpp.muc.leave', request)
     })
 
     it('Returns error if user not registered to that room', function(done) {
@@ -55,7 +61,7 @@ describe('Can leave a room', function() {
             done()
         })
         var request = { room: 'fire@coven@witches.lit' }
-        socket.emit('xmpp.muc.leave', request)
+        socket.send('xmpp.muc.leave', request)
     })
 
     it('Sends expected stanza', function(done) {
@@ -67,7 +73,7 @@ describe('Can leave a room', function() {
         })
         var request = { room: 'fire@coven@witches.lit' }
         muc.rooms.push(request.room)
-        socket.emit('xmpp.muc.leave', request)
+        socket.send('xmpp.muc.leave', request)
     })
 
     it('Sends expected stanza with \'status\' added', function(done) {
@@ -81,7 +87,7 @@ describe('Can leave a room', function() {
             reason: 'End of act 1'
         }
         muc.rooms.push(request.room)
-        socket.emit('xmpp.muc.leave', request)
+        socket.send('xmpp.muc.leave', request)
     })
 
     it('Removes room from MUC list', function(done) {
@@ -94,7 +100,7 @@ describe('Can leave a room', function() {
             reason: 'End of act 1'
         }
         muc.rooms = [ request.room ]
-        socket.emit('xmpp.muc.leave', request)
+        socket.send('xmpp.muc.leave', request)
     })
 
 })

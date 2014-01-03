@@ -13,8 +13,8 @@ describe('Sending a message', function() {
     var muc, socket, xmpp, manager
 
     before(function() {
-        socket = new helper.Eventer()
-        xmpp = new helper.Eventer()
+        socket = new helper.SocketEventer()
+        xmpp = new helper.XmppEventer()
         manager = {
             socket: socket,
             client: xmpp,
@@ -26,6 +26,12 @@ describe('Sending a message', function() {
             }
         }
         muc = new MultiUserChat()
+        muc.init(manager)
+    })
+
+    beforeEach(function() {
+        socket.removeAllListeners()
+        xmpp.removeAllListeners()
         muc.init(manager)
     })
 
@@ -48,7 +54,7 @@ describe('Sending a message', function() {
             done()
         })
         var request = {}
-        socket.emit('xmpp.muc.message', request)
+        socket.send('xmpp.muc.message', request)
     })
 
     it('Should return error if not registered with room', function(done) {
@@ -64,7 +70,7 @@ describe('Sending a message', function() {
             done()
         })
         var request = { room: 'fire@coven.witches.lit' }
-        socket.emit('xmpp.muc.message', request)
+        socket.send('xmpp.muc.message', request)
     })
 
     it('Errors if \'content\' and chat state not provided', function(done) {
@@ -85,7 +91,7 @@ describe('Sending a message', function() {
         })
         var request = { room: 'fire@witches.coven.lit' }
         muc.rooms.push(request.room)
-        socket.emit('xmpp.muc.message', request)
+        socket.send('xmpp.muc.message', request)
     })
 
     it('Sends expected stanza', function(done) {
@@ -100,7 +106,7 @@ describe('Sending a message', function() {
             content: 'some content'
         }
         muc.rooms.push(request.room)
-        socket.emit('xmpp.muc.message', request)
+        socket.send('xmpp.muc.message', request)
     })
 
     it('Sends expected stanza with chat state', function(done) {
@@ -117,7 +123,7 @@ describe('Sending a message', function() {
             state: 'active'
         }
         muc.rooms.push(request.room)
-        socket.emit('xmpp.muc.message', request)
+        socket.send('xmpp.muc.message', request)
     })
 
     it('Sends expected stanza with chat state only', function(done) {
@@ -133,7 +139,7 @@ describe('Sending a message', function() {
             state: 'active'
         }
         muc.rooms.push(request.room)
-        socket.emit('xmpp.muc.message', request)
+        socket.send('xmpp.muc.message', request)
     })
 
     it('Sends expected direct message', function(done) {
@@ -148,7 +154,7 @@ describe('Sending a message', function() {
             to: 'caldron'
         }
         muc.rooms.push(request.room)
-        socket.emit('xmpp.muc.message', request)
+        socket.send('xmpp.muc.message', request)
     })
 
     it('Can send XHTML message', function(done) {
@@ -167,7 +173,7 @@ describe('Sending a message', function() {
             format: 'xhtml'
         }
         muc.rooms.push(request.room)
-        socket.emit('xmpp.muc.message', request)
+        socket.send('xmpp.muc.message', request)
     })
 
 })

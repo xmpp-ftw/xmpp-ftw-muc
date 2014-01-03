@@ -12,8 +12,8 @@ describe('Can invite a user to a MUC room', function() {
     var muc, socket, xmpp, manager
 
     before(function() {
-        socket = new helper.Eventer()
-        xmpp = new helper.Eventer()
+        socket = new helper.SocketEventer()
+        xmpp = new helper.XmppEventer()
         manager = {
             socket: socket,
             client: xmpp,
@@ -25,6 +25,12 @@ describe('Can invite a user to a MUC room', function() {
             }
         }
         muc = new MultiUserChat()
+        muc.init(manager)
+    })
+
+    beforeEach(function() {
+        socket.removeAllListeners()
+        xmpp.removeAllListeners()
         muc.init(manager)
     })
 
@@ -42,7 +48,7 @@ describe('Can invite a user to a MUC room', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.invite', {})
+            socket.send('xmpp.muc.invite', {})
         })
 
         it('Returns error if \'to\' key not provided', function(done) {
@@ -58,7 +64,7 @@ describe('Can invite a user to a MUC room', function() {
                 done()
             })
             var request = { room: 'fire@coven@witches.lit' }
-            socket.emit('xmpp.muc.invite', request)
+            socket.send('xmpp.muc.invite', request)
         })
 
         it('Sends the expected stanza', function(done) {
@@ -77,7 +83,7 @@ describe('Can invite a user to a MUC room', function() {
                 invite.attrs.to.should.equal(request.to)
                 done()
             })
-            socket.emit('xmpp.muc.invite', request)
+            socket.send('xmpp.muc.invite', request)
         })
 
         it('Sends expected stanza with reason', function(done) {
@@ -98,7 +104,7 @@ describe('Can invite a user to a MUC room', function() {
 
                 done()
             })
-            socket.emit('xmpp.muc.invite', request)
+            socket.send('xmpp.muc.invite', request)
         })
 
     })

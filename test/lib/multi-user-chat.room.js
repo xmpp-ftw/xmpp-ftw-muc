@@ -12,8 +12,8 @@ describe('MUC Rooms', function() {
     var muc, socket, xmpp, manager
 
     before(function() {
-        socket = new helper.Eventer()
-        xmpp = new helper.Eventer()
+        socket = new helper.SocketEventer()
+        xmpp = new helper.XmppEventer()
         manager = {
             socket: socket,
             client: xmpp,
@@ -25,6 +25,12 @@ describe('MUC Rooms', function() {
             }
         }
         muc = new MultiUserChat()
+        muc.init(manager)
+    })
+
+    beforeEach(function() {
+        socket.removeAllListeners()
+        xmpp.removeAllListeners()
         muc.init(manager)
     })
 
@@ -42,7 +48,7 @@ describe('MUC Rooms', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.destroy', {})
+            socket.send('xmpp.muc.destroy', {})
         })
 
         it('Errors when non-function callback provided', function(done) {
@@ -57,7 +63,7 @@ describe('MUC Rooms', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.destroy', {}, true)
+            socket.send('xmpp.muc.destroy', {}, true)
         })
 
         it('Errors if \'room\' key missing', function(done) {
@@ -73,7 +79,7 @@ describe('MUC Rooms', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             }
-            socket.emit('xmpp.muc.destroy', {}, callback)
+            socket.send('xmpp.muc.destroy', {}, callback)
         })
 
         it('Sends expected stanza', function(done) {
@@ -88,7 +94,7 @@ describe('MUC Rooms', function() {
                 query.getChild('destroy').should.exist
                 done()
             })
-            socket.emit(
+            socket.send(
                 'xmpp.muc.destroy',
                 { room: room },
                 function() {}
@@ -113,7 +119,7 @@ describe('MUC Rooms', function() {
                 query.getChildText('destroy').should.equal(request.reason)
                 done()
             })
-            socket.emit(
+            socket.send(
                 'xmpp.muc.destroy',
                 request,
                 function() {}
@@ -133,7 +139,7 @@ describe('MUC Rooms', function() {
                 })
                 done()
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.destroy',
                 { room: room },
                 callback
@@ -150,7 +156,7 @@ describe('MUC Rooms', function() {
                 success.should.be.true
                 done()
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.destroy',
                 { room: room },
                 callback
@@ -173,7 +179,7 @@ describe('MUC Rooms', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.create', {})
+            socket.send('xmpp.muc.create', {})
         })
 
         it('Errors when non-function callback provided', function(done) {
@@ -188,7 +194,7 @@ describe('MUC Rooms', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.create', {}, true)
+            socket.send('xmpp.muc.create', {}, true)
         })
 
 
@@ -205,7 +211,7 @@ describe('MUC Rooms', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             }
-            socket.emit('xmpp.muc.create', {}, callback)
+            socket.send('xmpp.muc.create', {}, callback)
         })
 
         it('Errors if \'form\' provided and not valid', function(done) {
@@ -222,7 +228,7 @@ describe('MUC Rooms', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             }
-            socket.emit('xmpp.muc.create', request, callback)
+            socket.send('xmpp.muc.create', request, callback)
         })
 
         it('Sends expected stanza', function(done) {
@@ -240,7 +246,7 @@ describe('MUC Rooms', function() {
                 x.children.length.should.equal(0)
                 done()
             })
-            socket.emit('xmpp.muc.create', request, function() {})
+            socket.send('xmpp.muc.create', request, function() {})
         })
 
         it('Sends expected stanza with data form', function(done) {
@@ -275,7 +281,7 @@ describe('MUC Rooms', function() {
 
                 done()
             })
-            socket.emit('xmpp.muc.create', request, function() {})
+            socket.send('xmpp.muc.create', request, function() {})
         })
 
         it('Handles error response', function(done) {
@@ -291,7 +297,7 @@ describe('MUC Rooms', function() {
                 })
                 done()
             }
-            socket.emit('xmpp.muc.create', request, callback)
+            socket.send('xmpp.muc.create', request, callback)
         })
 
         it('Handes success response', function(done) {
@@ -304,7 +310,7 @@ describe('MUC Rooms', function() {
                 success.should.be.true
                 done()
             }
-            socket.emit('xmpp.muc.create', request, callback)
+            socket.send('xmpp.muc.create', request, callback)
         })
 
     })

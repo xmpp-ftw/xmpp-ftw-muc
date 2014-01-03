@@ -12,8 +12,8 @@ describe('Room configuration', function() {
     var muc, socket, xmpp, manager
 
     before(function() {
-        socket = new helper.Eventer()
-        xmpp = new helper.Eventer()
+        socket = new helper.SocketEventer()
+        xmpp = new helper.XmppEventer()
         manager = {
             socket: socket,
             client: xmpp,
@@ -25,6 +25,12 @@ describe('Room configuration', function() {
             }
         }
         muc = new MultiUserChat()
+        muc.init(manager)
+    })
+
+    beforeEach(function() {
+        socket.removeAllListeners()
+        xmpp.removeAllListeners()
         muc.init(manager)
     })
 
@@ -42,7 +48,7 @@ describe('Room configuration', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.room.config.get', {})
+            socket.send('xmpp.muc.room.config.get', {})
         })
 
         it('Errors when non-function callback provided', function(done) {
@@ -57,7 +63,7 @@ describe('Room configuration', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.room.config.get', {}, true)
+            socket.send('xmpp.muc.room.config.get', {}, true)
         })
 
         it('Errors if \'room\' key missing', function(done) {
@@ -74,7 +80,7 @@ describe('Room configuration', function() {
                 done()
             }
             var request = {}
-            socket.emit('xmpp.muc.room.config.get', request, callback)
+            socket.send('xmpp.muc.room.config.get', request, callback)
         })
 
         it('Handles error response stanza', function(done) {
@@ -95,7 +101,7 @@ describe('Room configuration', function() {
                 })
                 done()
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.room.config.get',
                 { room: room },
                 callback
@@ -127,7 +133,7 @@ describe('Room configuration', function() {
                 data.fields[0].required.should.equal.false
                 done()
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.room.config.get',
                 { room: room },
                 callback
@@ -149,7 +155,7 @@ describe('Room configuration', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.room.config.set', {})
+            socket.send('xmpp.muc.room.config.set', {})
         })
 
         it('Errors when non-function callback provided', function(done) {
@@ -164,7 +170,7 @@ describe('Room configuration', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.room.config.set', {}, true)
+            socket.send('xmpp.muc.room.config.set', {}, true)
         })
 
         it('Errors if \'room\' key missing', function(done) {
@@ -181,7 +187,7 @@ describe('Room configuration', function() {
                 done()
             }
             var request = {}
-            socket.emit('xmpp.muc.room.config.set', request, callback)
+            socket.send('xmpp.muc.room.config.set', request, callback)
         })
 
         it('Errors if \'form\' key missing', function(done) {
@@ -198,7 +204,7 @@ describe('Room configuration', function() {
                 done()
             }
             var request = { room: 'fire@witches.coven.lit' }
-            socket.emit('xmpp.muc.room.config.set', request, callback)
+            socket.send('xmpp.muc.room.config.set', request, callback)
         })
 
         it('Handles invalid data form', function(done) {
@@ -215,7 +221,7 @@ describe('Room configuration', function() {
                 done()
             }
             var request = { room: 'fire@witches.coven.lit', form: true }
-            socket.emit('xmpp.muc.room.config.set', request, callback)
+            socket.send('xmpp.muc.room.config.set', request, callback)
         })
 
         it('Handles error response stanza', function(done) {
@@ -236,7 +242,7 @@ describe('Room configuration', function() {
                 })
                 done()
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.room.config.set',
                 { room: room, form: [] },
                 callback
@@ -268,7 +274,7 @@ describe('Room configuration', function() {
                 data.should.be.true
                 done()
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.room.config.set',
                 request,
                 callback
@@ -291,7 +297,7 @@ describe('Room configuration', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.cancel', {})
+            socket.send('xmpp.muc.cancel', {})
         })
 
         it('Errors when non-function callback provided', function(done) {
@@ -306,7 +312,7 @@ describe('Room configuration', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.cancel', {}, true)
+            socket.send('xmpp.muc.cancel', {}, true)
         })
 
 
@@ -323,7 +329,7 @@ describe('Room configuration', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             }
-            socket.emit('xmpp.muc.cancel', {}, callback)
+            socket.send('xmpp.muc.cancel', {}, callback)
         })
 
         it('Sends expected stanza', function(done) {
@@ -341,7 +347,7 @@ describe('Room configuration', function() {
                 x.children.length.should.equal(0)
                 done()
             })
-            socket.emit('xmpp.muc.cancel', request, function() {})
+            socket.send('xmpp.muc.cancel', request, function() {})
         })
 
         it('Handles error response', function(done) {
@@ -357,7 +363,7 @@ describe('Room configuration', function() {
                 })
                 done()
             }
-            socket.emit('xmpp.muc.cancel', request, callback)
+            socket.send('xmpp.muc.cancel', request, callback)
         })
 
         it('Handes success response', function(done) {
@@ -370,7 +376,7 @@ describe('Room configuration', function() {
                 success.should.be.true
                 done()
             }
-            socket.emit('xmpp.muc.cancel', request, callback)
+            socket.send('xmpp.muc.cancel', request, callback)
         })
 
     })

@@ -11,8 +11,8 @@ describe('MultiUserChat', function() {
     var muc, socket, xmpp, manager
 
     before(function() {
-        socket = new helper.Eventer()
-        xmpp = new helper.Eventer()
+        socket = new helper.SocketEventer()
+        xmpp = new helper.XmppEventer()
         manager = {
             socket: socket,
             client: xmpp,
@@ -24,6 +24,12 @@ describe('MultiUserChat', function() {
             }
         }
         muc = new MultiUserChat()
+        muc.init(manager)
+    })
+
+    beforeEach(function() {
+        socket.removeAllListeners()
+        xmpp.removeAllListeners()
         muc.init(manager)
     })
 
@@ -41,7 +47,7 @@ describe('MultiUserChat', function() {
             done()
         })
         var request = {}
-        socket.emit('xmpp.muc.subject', request)
+        socket.send('xmpp.muc.subject', request)
     })
 
     it('Sends expected stanza with subject text', function(done) {
@@ -59,7 +65,7 @@ describe('MultiUserChat', function() {
             room: 'fire@witches.coven.lit',
             subject: 'Gathering around the fire...'
         }
-        socket.emit(
+        socket.send(
             'xmpp.muc.subject',
             request
         )
@@ -80,7 +86,7 @@ describe('MultiUserChat', function() {
         var request = {
             room: 'fire@witches.coven.lit'
         }
-        socket.emit(
+        socket.send(
             'xmpp.muc.subject',
             request
         )

@@ -11,8 +11,8 @@ describe('Affiliation updates', function() {
     var muc, socket, xmpp, manager
 
     before(function() {
-        socket = new helper.Eventer()
-        xmpp = new helper.Eventer()
+        socket = new helper.SocketEventer()
+        xmpp = new helper.XmppEventer()
         manager = {
             socket: socket,
             client: xmpp,
@@ -24,6 +24,12 @@ describe('Affiliation updates', function() {
             }
         }
         muc = new MultiUserChat()
+        muc.init(manager)
+    })
+
+    beforeEach(function() {
+        socket.removeAllListeners()
+        xmpp.removeAllListeners()
         muc.init(manager)
     })
 
@@ -48,7 +54,7 @@ describe('Affiliation updates', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.affiliation', {})
+            socket.send('xmpp.muc.affiliation', {})
         })
 
         it('Errors when non-function callback provided', function(done) {
@@ -63,7 +69,7 @@ describe('Affiliation updates', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.affiliation', {}, true)
+            socket.send('xmpp.muc.affiliation', {}, true)
         })
 
         it('Errors if \'room\' key not provided', function(done) {
@@ -80,7 +86,7 @@ describe('Affiliation updates', function() {
                 done()
             }
             var request = {}
-            socket.emit('xmpp.muc.affiliation', request, callback)
+            socket.send('xmpp.muc.affiliation', request, callback)
         })
 
         it('Errors if \'jid\' key not provided', function(done) {
@@ -97,7 +103,7 @@ describe('Affiliation updates', function() {
                 done()
             }
             var request = { room: 'fire@witches.coven.lit' }
-            socket.emit('xmpp.muc.affiliation', request, callback)
+            socket.send('xmpp.muc.affiliation', request, callback)
         })
 
         it('Errors if \'affiliation\' key not provided', function(done) {
@@ -117,7 +123,7 @@ describe('Affiliation updates', function() {
                 room: 'fire@witches.coven.lit',
                 jid: 'bottom@midsummer.lit'
             }
-            socket.emit('xmpp.muc.affiliation', request, callback)
+            socket.send('xmpp.muc.affiliation', request, callback)
         })
 
         it('Handles error response stanza', function(done) {
@@ -145,7 +151,7 @@ describe('Affiliation updates', function() {
                 jid: 'bottom@midsummer.lit',
                 affiliation: 'outcast'
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.affiliation',
                 request,
                 callback
@@ -176,7 +182,7 @@ describe('Affiliation updates', function() {
                 affiliation: 'outcast',
                 reason: 'Making an ass of himself'
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.affiliation',
                 request,
                 callback

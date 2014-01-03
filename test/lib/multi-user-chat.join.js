@@ -10,8 +10,8 @@ describe('Can join a MUC room', function() {
     var muc, socket, xmpp, manager
 
     before(function() {
-        socket = new helper.Eventer()
-        xmpp = new helper.Eventer()
+        socket = new helper.SocketEventer()
+        xmpp = new helper.XmppEventer()
         manager = {
             socket: socket,
             client: xmpp,
@@ -23,6 +23,12 @@ describe('Can join a MUC room', function() {
             }
         }
         muc = new MultiUserChat()
+        muc.init(manager)
+    })
+
+    beforeEach(function() {
+        socket.removeAllListeners()
+        xmpp.removeAllListeners()
         muc.init(manager)
     })
 
@@ -38,7 +44,7 @@ describe('Can join a MUC room', function() {
             xmpp.removeAllListeners('stanza')
             done()
         })
-        socket.emit('xmpp.muc.join', {})
+        socket.send('xmpp.muc.join', {})
     })
 
     it('Returns error if \'nick\' key not provided', function(done) {
@@ -54,7 +60,7 @@ describe('Can join a MUC room', function() {
             done()
         })
         var request = { room: 'fire@coven@witches.lit' }
-        socket.emit('xmpp.muc.join', request)
+        socket.send('xmpp.muc.join', request)
     })
 
     it('Sends the expected stanza', function(done) {
@@ -66,7 +72,7 @@ describe('Can join a MUC room', function() {
             muc.rooms.indexOf(request.room).should.be.above(-1)
             done()
         })
-        socket.emit('xmpp.muc.join', request)
+        socket.send('xmpp.muc.join', request)
     })
 
 })

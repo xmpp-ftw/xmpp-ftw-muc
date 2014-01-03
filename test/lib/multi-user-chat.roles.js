@@ -12,8 +12,8 @@ describe('Roles', function() {
     var muc, socket, xmpp, manager
 
     before(function() {
-        socket = new helper.Eventer()
-        xmpp = new helper.Eventer()
+        socket = new helper.SocketEventer()
+        xmpp = new helper.XmppEventer()
         manager = {
             socket: socket,
             client: xmpp,
@@ -25,6 +25,12 @@ describe('Roles', function() {
             }
         }
         muc = new MultiUserChat()
+        muc.init(manager)
+    })
+
+    beforeEach(function() {
+        socket.removeAllListeners()
+        xmpp.removeAllListeners()
         muc.init(manager)
     })
 
@@ -42,7 +48,7 @@ describe('Roles', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.role.set', {})
+            socket.send('xmpp.muc.role.set', {})
         })
 
         it('Errors when non-function callback provided', function(done) {
@@ -57,7 +63,7 @@ describe('Roles', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.role.set', {}, true)
+            socket.send('xmpp.muc.role.set', {}, true)
         })
 
         it('Errors if \'room\' key not provided', function(done) {
@@ -74,7 +80,7 @@ describe('Roles', function() {
                 done()
             }
             var request = {}
-            socket.emit('xmpp.muc.role.set', request, callback)
+            socket.send('xmpp.muc.role.set', request, callback)
         })
 
         it('Errors if \'nick\' key not provided', function(done) {
@@ -91,7 +97,7 @@ describe('Roles', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             }
-            socket.emit('xmpp.muc.role.set', request, callback)
+            socket.send('xmpp.muc.role.set', request, callback)
         })
 
         it('Errors if \'role\' key not provided', function(done) {
@@ -111,7 +117,7 @@ describe('Roles', function() {
                 room: 'fire@witches.coven.lit',
                 nick: 'notofwomanborn'
             }
-            socket.emit('xmpp.muc.role.set', request, callback)
+            socket.send('xmpp.muc.role.set', request, callback)
         })
 
         it('Handles error response stanza', function(done) {
@@ -139,7 +145,7 @@ describe('Roles', function() {
                 nick: 'notofwomanborn',
                 role: 'participant'
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.role.set',
                 request,
                 callback
@@ -166,7 +172,7 @@ describe('Roles', function() {
                 role: 'participant',
                 reason: 'Great nick!'
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.role.set',
                 request,
                 callback
@@ -189,7 +195,7 @@ describe('Roles', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.role.get', {})
+            socket.send('xmpp.muc.role.get', {})
         })
 
         it('Errors when non-function callback provided', function(done) {
@@ -204,7 +210,7 @@ describe('Roles', function() {
                 xmpp.removeAllListeners('stanza')
                 done()
             })
-            socket.emit('xmpp.muc.role.get', {}, true)
+            socket.send('xmpp.muc.role.get', {}, true)
         })
 
         it('Errors if \'room\' key not provided', function(done) {
@@ -221,7 +227,7 @@ describe('Roles', function() {
                 done()
             }
             var request = {}
-            socket.emit('xmpp.muc.role.get', request, callback)
+            socket.send('xmpp.muc.role.get', request, callback)
         })
 
         it('Errors if \'role\' key not provided', function(done) {
@@ -240,7 +246,7 @@ describe('Roles', function() {
             var request = {
                 room: 'fire@witches.coven.lit'
             }
-            socket.emit('xmpp.muc.role.get', request, callback)
+            socket.send('xmpp.muc.role.get', request, callback)
         })
 
         it('Handles error response stanza', function(done) {
@@ -266,7 +272,7 @@ describe('Roles', function() {
                 room: 'fire@witches.coven.lit',
                 role: 'participant'
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.role.get',
                 request,
                 callback
@@ -302,7 +308,7 @@ describe('Roles', function() {
                 room: 'fire@witches.coven.lit',
                 role: 'participant'
             }
-            socket.emit(
+            socket.send(
                 'xmpp.muc.role.get',
                 request,
                 callback
@@ -323,7 +329,7 @@ describe('Roles', function() {
                 done()
             })
             var request = {}
-            socket.emit('xmpp.muc.voice', request)
+            socket.send('xmpp.muc.voice', request)
         })
 
         it('Errors if \'role\' not provided', function(done) {
@@ -336,7 +342,7 @@ describe('Roles', function() {
                 done()
             })
             var request = { room: 'fire@witches.coven.lit' }
-            socket.emit('xmpp.muc.voice', request)
+            socket.send('xmpp.muc.voice', request)
         })
 
         it('Sends expected stanza', function(done) {
@@ -368,7 +374,7 @@ describe('Roles', function() {
                 room: 'fire@coven@witches.lit',
                 role: 'participant'
             }
-            socket.emit('xmpp.muc.voice', request)
+            socket.send('xmpp.muc.voice', request)
         })
 
     })
