@@ -130,7 +130,6 @@ describe('Room configuration', function() {
                 data.fields[0].type = 'text-single'
                 data.fields[0].var = 'muc#roomconfig_roomdesc'
                 data.fields[0].value = 'Come chat around the fire'
-                data.fields[0].required.should.equal.false
                 done()
             }
             socket.send(
