@@ -31,12 +31,12 @@
     "url": "https://github.com/xmpp-ftw/xmpp-ftw-muc/issues"
   },
   "dependencies": {
-    "ltx": "*"
+    "ltx": "0.x"
   },
   "devDependencies": {
     "mocha": "~1.8.1",
     "should": "~1.2.2",
-    "xmpp-ftw": "*",
+    "xmpp-ftw": "1.x",
     "grunt-mocha-cli": "~1.4.0",
     "grunt": "~0.4.2",
     "grunt-contrib-jshint": "~0.7.2"
