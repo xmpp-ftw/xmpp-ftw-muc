@@ -17,6 +17,8 @@ describe('Register with a room', function() {
             socket: socket,
             client: xmpp,
             trackId: function(id, callback) {
+                if (typeof id !== 'object')
+                    throw new Error('Stanza ID spoofing protection not implemented')
                 this.callback = callback
             },
             makeCallback: function(error, data) {
