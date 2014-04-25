@@ -60,9 +60,8 @@ describe('Incoming stanzas', function() {
         it('<message /> of type error', function(done) {
             socket.once('xmpp.muc.error', function(error) {
                 error.type.should.equal('message')
-                error.error.should.eql(
-                    { type: 'modify', condition: 'bad-request' }
-                )
+                error.error.type.should.equal('modify')
+                error.error.condition.should.equal('bad-request')
                 error.room.should.equal('fire@coven.witches.lit')
                 error.content.should.equal('Are you of woman born?')
                 done()
