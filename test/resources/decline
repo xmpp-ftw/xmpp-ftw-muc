@@ -1,0 +1,12 @@
+<message
+    from='room@muc.coven.witches.lit'
+    id='jk2vs61v'
+    to='fire@coven.witches.lit'>
+  <x xmlns='http://jabber.org/protocol/muc#user'>
+    <decline from='witch1@witches.lit'>
+      <reason>
+        Sorry, I'm too busy right now.
+      </reason>
+    </decline>
+  </x>
+</message>
