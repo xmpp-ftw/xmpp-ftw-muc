@@ -76,5 +76,30 @@ describe('Can join a MUC room', function() {
         })
         socket.send('xmpp.muc.join', request)
     })
+    
+    describe('MUC history', function() {
+    
+        it('Sends expected stanza with history', function(done) {
+            var request = {
+                room: 'fire@coven.witches.lit',
+                nick: 'caldron',
+                history: {
+                    maxchars: '6550',
+                    maxstanzas: '37',
+                    seconds: '3600',
+                    since: '2014-05-03T22:09:00.000Z'
+                }
+            }
+            xmpp.once('stanza', function(stanza) {
+                var history = stanza.getChild('x', muc.NS).getChild('history')
+                history.attrs.maxchars.should.equal(request.history.maxchars)
+                history.attrs.maxstanzas.should.equal(request.history.maxstanzas)
+                history.attrs.seconds.should.equal(request.history.seconds)
+                history.attrs.since.should.equal(request.history.since)
+                done()
+            })
+            socket.send('xmpp.muc.join', request)
+        })
+    })
 
 })
