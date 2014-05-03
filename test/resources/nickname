@@ -1,0 +1,12 @@
+<iq from='coven@chat.shakespeare.lit'
+    id='getnick1'
+    to='hag66@shakespeare.lit/pda'
+    type='result'>
+  <query xmlns='http://jabber.org/protocol/disco#info'
+         node='x-roomuser-item'>
+    <identity
+        category='conference'
+        name='firstwitch'
+        type='text'/>
+  </query>
+</iq>
