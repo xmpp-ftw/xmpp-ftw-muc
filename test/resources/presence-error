@@ -1,0 +1,14 @@
+<presence
+    from='fire@coven.witches.lit/cauldron'
+    to='macbeth@example.com/castle'
+    type="error"
+    xml:lang=""
+    xmlns:stream="http://etherx.jabber.org/streams">
+  <status>Hi everyone</status>
+  <priority>10</priority>
+  <show>online</show>
+  <error code="404" type="cancel">
+    <item-not-found xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/>
+    <text xmlns="urn:ietf:params:xml:ns:xmpp-stanzas">This room is locked</text>
+  </error>
+</presence>

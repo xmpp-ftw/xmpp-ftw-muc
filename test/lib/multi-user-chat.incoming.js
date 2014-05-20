@@ -2,10 +2,10 @@
 
 /* jshint -W030 */
 
-var should        = require('should')
-  , MultiUserChat = require('../../index')
-  , ltx           = require('ltx')
-  , helper        = require('../helper')
+var should = require('should'),
+    MultiUserChat = require('../../index'),
+    ltx = require('ltx'),
+    helper = require('../helper')
 
 describe('Incoming stanzas', function() {
 
@@ -140,7 +140,7 @@ describe('Incoming stanzas', function() {
             socket.once('xmpp.muc.room.config', function(message) {
                 message.room.should.equal('fire@coven.witches.lit')
                 message.status.length.should.equal(2)
-                message.status.should.eql([ 170, 666])
+                message.status.should.eql([170, 666])
                 done()
             })
             var stanza = helper.getStanza('message-config')
@@ -156,7 +156,7 @@ describe('Incoming stanzas', function() {
                 message.nick.should.equal('lonely-singleton')
                 message.role.should.equal('participant')
                 message.status.length.should.equal(1)
-                message.status.should.eql([ 303 ])
+                message.status.should.eql([303])
                 done()
             })
             var stanza = helper.getStanza('nickname-change')
@@ -196,6 +196,19 @@ describe('Incoming stanzas', function() {
             muc.handle(stanza).should.be.true
         })
 
+    })
+
+    it('Handles incoming presence stanzas', function(done) {
+        socket.once('xmpp.muc.error', function(error) {
+            error.type.should.equal('presence')
+            error.room.should.equal('fire@coven.witches.lit')
+            error.error.condition.should.equal('item-not-found')
+            error.error.type.should.equal('cancel')
+            error.error.description.should.equal('This room is locked')
+            done()
+        })
+        var stanza = helper.getStanza('presence-error')
+        muc.handle(stanza).should.be.true
     })
 
     it('Handles incoming presence stanzas', function(done) {
