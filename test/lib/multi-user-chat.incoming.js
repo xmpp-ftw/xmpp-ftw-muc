@@ -2,10 +2,10 @@
 
 /* jshint -W030 */
 
-var should = require('should'),
-    MultiUserChat = require('../../index'),
-    ltx = require('ltx'),
-    helper = require('../helper')
+var should = require('should')
+  , MultiUserChat = require('../../index')
+  , ltx = require('ltx')
+  , helper = require('../helper')
 
 describe('Incoming stanzas', function() {
 
@@ -198,7 +198,7 @@ describe('Incoming stanzas', function() {
 
     })
 
-    it('Handles incoming presence stanzas', function(done) {
+    it('Handles room not found stanzas', function(done) {
         socket.once('xmpp.muc.error', function(error) {
             error.type.should.equal('presence')
             error.room.should.equal('fire@coven.witches.lit')
