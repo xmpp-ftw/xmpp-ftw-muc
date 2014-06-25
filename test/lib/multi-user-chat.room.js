@@ -184,12 +184,28 @@ describe('MUC Rooms', function() {
             socket.send('xmpp.muc.create', {})
         })
         
+        it('Errors if \'nick\' key missing', function(done) {
+            xmpp.once('stanza', function() {
+                done('Unexpected outgoing stanza')
+            })
+            socket.once('xmpp.error.client', function(data) {
+                data.type.should.equal('modify')
+                data.condition.should.equal('client-error')
+                data.description.should.equal('Missing \'nick\' key')
+                data.request.should.eql({ room: 'room@chat.example.com' })
+                xmpp.removeAllListeners('stanza')
+                done()
+            })
+            socket.send('xmpp.muc.create', { room: 'room@chat.example.com' })
+        })
+        
         it('Adds the room to the room list', function(done) {
             var roomCreateError = helper.getStanza('presence-room-create-error')
             muc.handles(roomCreateError)
                 .should.be.false
             var request = {
                 room: 'coven@chat.shakespeare.lit',
+                nick: 'firstwitch',
                 instant: true
             }
             socket.send('xmpp.muc.create', request)
@@ -199,10 +215,13 @@ describe('MUC Rooms', function() {
         })
 
         it('Sends expected stanza', function(done) {
-            var request = { room: 'fire@coven.witches.lit' }
+            var request = {
+                room: 'fire@coven.witches.lit',
+                nick: 'firstwitch'
+            }
             xmpp.once('stanza', function(stanza) {
                 stanza.is('presence').should.be.true
-                stanza.attrs.to.should.equal(request.room)
+                stanza.attrs.to.should.equal(request.room + '/' + request.nick)
                 var x = stanza
                     .getChild('x', muc.NS)
                 x.should.exist
@@ -215,6 +234,7 @@ describe('MUC Rooms', function() {
         it('Sends expected stanza for instant room', function(done) {
             var request = {
                 room: 'fire@coven.witches.lit',
+                nick: 'firstwitch',
                 instant: true
             }
             xmpp.once('stanza', function(stanza) {
