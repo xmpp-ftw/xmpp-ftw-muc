@@ -169,51 +169,33 @@ describe('MUC Rooms', function() {
 
     describe('Create a room', function() {
 
-        it('Errors when no callback provided', function(done) {
+        it('Errors if \'room\' key missing', function(done) {
             xmpp.once('stanza', function() {
                 done('Unexpected outgoing stanza')
             })
-            socket.once('xmpp.error.client', function(error) {
-                error.type.should.equal('modify')
-                error.condition.should.equal('client-error')
-                error.description.should.equal('Missing callback')
-                error.request.should.eql({})
+            socket.once('xmpp.error.client', function(data) {
+                data.type.should.equal('modify')
+                data.condition.should.equal('client-error')
+                data.description.should.equal('Missing \'room\' key')
+                data.request.should.eql({})
                 xmpp.removeAllListeners('stanza')
                 done()
             })
             socket.send('xmpp.muc.create', {})
         })
-
-        it('Errors when non-function callback provided', function(done) {
-            xmpp.once('stanza', function() {
-                done('Unexpected outgoing stanza')
-            })
-            socket.once('xmpp.error.client', function(error) {
-                error.type.should.equal('modify')
-                error.condition.should.equal('client-error')
-                error.description.should.equal('Missing callback')
-                error.request.should.eql({})
-                xmpp.removeAllListeners('stanza')
-                done()
-            })
-            socket.send('xmpp.muc.create', {}, true)
-        })
-
-
-        it('Errors if \'room\' key missing', function(done) {
-            xmpp.once('stanza', function() {
-                done('Unexpected outgoing stanza')
-            })
-            var callback = function(error, success) {
-                should.not.exist(success)
-                error.type.should.equal('modify')
-                error.condition.should.equal('client-error')
-                error.description.should.equal('Missing \'room\' key')
-                error.request.should.eql({})
-                xmpp.removeAllListeners('stanza')
-                done()
+        
+        it('Adds the room to the room list', function(done) {
+            var roomCreateError = helper.getStanza('presence-room-create-error')
+            muc.handles(roomCreateError)
+                .should.be.false
+            var request = {
+                room: 'coven@chat.shakespeare.lit',
+                instant: true
             }
-            socket.send('xmpp.muc.create', {}, callback)
+            socket.send('xmpp.muc.create', request)
+            muc.handles(roomCreateError)
+                .should.be.true
+            done()
         })
 
         it('Sends expected stanza', function(done) {
@@ -236,14 +218,13 @@ describe('MUC Rooms', function() {
                 instant: true
             }
             xmpp.once('stanza', function(stanza) {
-                var x = stanza
-                    .getChild('x', dataForm.NS)
+                var x = stanza.getChild('x', dataForm.NS)
 
                 x.should.exist
                 x.attrs.type.should.equal('submit')
                 done()
             })
-            socket.send('xmpp.muc.create', request, function() {})
+            socket.send('xmpp.muc.create', request)
         })
         
         it('Handles error creating a room', function(done) {
