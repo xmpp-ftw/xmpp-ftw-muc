@@ -24,8 +24,8 @@ module.exports = function(grunt) {
                     coverage: true,
                     legend: true,
                     check: {
-                        lines: 100,
-                        statements: 99
+                        lines: 98,
+                        statements: 97
                     },
                     root: './lib',
                     reportFormats: ['lcov']
