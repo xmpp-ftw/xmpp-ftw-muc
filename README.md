@@ -12,7 +12,7 @@ See the XMPP-FTW demo repository - https://github.com/xmpp-ftw/xmpp-ftw-demo
 # Build status
 
 [![Build Status](https://secure.travis-ci.org/xmpp-ftw/xmpp-ftw-muc.png)](http://travis-ci.org/xmpp-ftw/xmpp-ftw-muc)
-
+[![Coverage Status](https://img.shields.io/coveralls/xmpp-ftw/xmpp-ftw-muc.svg)](https://coveralls.io/r/xmpp-ftw/xmpp-ftw-muc)
 # Install
 
 ```
