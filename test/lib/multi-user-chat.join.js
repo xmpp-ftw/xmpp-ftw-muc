@@ -76,6 +76,22 @@ describe('Can join a MUC room', function() {
         })
         socket.send('xmpp.muc.join', request)
     })
+
+    it('Adds a password if provided', function(done) {
+        var request = {
+            room: 'fire@coven.witches.lit',
+            nick: 'caldron',
+            password: 'fire'
+        }
+        xmpp.once('stanza', function(stanza) {
+            stanza.is('presence').should.be.true
+            var x = stanza.getChild('x', muc.NS)
+            x.should.exist
+            x.getChildText('password').should.equal(request.password)
+            done()
+        })
+        socket.send('xmpp.muc.join', request)
+    })
     
     describe('MUC history', function() {
     
