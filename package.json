@@ -36,7 +36,7 @@
   "devDependencies": {
     "coveralls": "^2.11.2",
     "grunt-mocha-istanbul": "^2.2.0",
-    "istanbul": "^0.3.2",
+    "istanbul": "^0.4.2",
     "mocha": "~1.8.1",
     "should": "~1.2.2",
     "xmpp-ftw": "1.x",
