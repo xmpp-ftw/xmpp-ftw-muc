@@ -34,7 +34,7 @@
     "ltx": "0.x"
   },
   "devDependencies": {
-    "coveralls": "^2.11.2",
+    "coveralls": "^2.11.10",
     "grunt-mocha-istanbul": "^2.2.0",
     "istanbul": "^0.3.2",
     "mocha": "~1.8.1",
