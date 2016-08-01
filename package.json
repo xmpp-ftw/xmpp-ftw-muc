@@ -37,7 +37,7 @@
     "coveralls": "^2.11.2",
     "grunt-mocha-istanbul": "^2.2.0",
     "istanbul": "^0.3.2",
-    "mocha": "~1.8.1",
+    "mocha": "~3.0.0",
     "should": "~1.2.2",
     "xmpp-ftw": "1.x",
     "grunt-mocha-cli": "~1.4.0",
