@@ -39,7 +39,7 @@
     "istanbul": "^0.3.2",
     "mocha": "~1.8.1",
     "should": "~1.2.2",
-    "xmpp-ftw": "1.x",
+    "xmpp-ftw": "2.0.0",
     "grunt-mocha-cli": "~1.4.0",
     "grunt": "~0.4.2",
     "grunt-contrib-jshint": "~0.7.2"
