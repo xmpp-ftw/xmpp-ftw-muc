@@ -31,7 +31,7 @@
     "url": "https://github.com/xmpp-ftw/xmpp-ftw-muc/issues"
   },
   "dependencies": {
-    "ltx": "0.x"
+    "ltx": "2.7.0"
   },
   "devDependencies": {
     "coveralls": "^2.11.2",
