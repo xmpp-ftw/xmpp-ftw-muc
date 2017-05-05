@@ -1,6 +1,8 @@
 xmpp-ftw-muc
 ==============
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/xmpp-ftw/xmpp-ftw-muc.svg)](https://greenkeeper.io/)
+
 A Multi User Chat/MUC (XEP-0045) plugin for XMPP-FTW.
 
 https://github.com/xmpp-ftw/xmpp-ftw.git
